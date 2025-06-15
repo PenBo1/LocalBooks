@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 获取书架列表
 export function getBookshelf(page: number = 1, page_size: number = 10, sort_by: string = 'updated_at') {
   return request({
-    url: '/bookshelf',
+    url: '/bookshelf/list',
     method: 'get',
     params: { page, page_size, sort_by }
   })
@@ -16,7 +16,7 @@ export function addToBookshelf(data: {
   last_read_position?: number
 }) {
   return request({
-    url: '/bookshelf',
+    url: '/bookshelf/add',
     method: 'post',
     data
   })
@@ -28,8 +28,8 @@ export function updateBookshelfItem(id: number, data: {
   last_read_position?: number
 }) {
   return request({
-    url: `/bookshelf/${id}`,
-    method: 'put',
+    url: `/bookshelf/update/${id}`,
+    method: 'post',
     data
   })
 }
@@ -37,7 +37,7 @@ export function updateBookshelfItem(id: number, data: {
 // 从书架移除
 export function removeFromBookshelf(novel_id: number) {
   return request({
-    url: `/bookshelf/${novel_id}`,
-    method: 'delete'
+    url: `/bookshelf/remove/${novel_id}`,
+    method: 'post'
   })
 }

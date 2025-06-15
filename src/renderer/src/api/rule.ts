@@ -30,7 +30,7 @@ export function createRule(data: {
   chapter_content_rule: string
 }) {
   return request({
-    url: '/rule',
+    url: '/rule/',
     method: 'post',
     data
   })
@@ -49,8 +49,8 @@ export function updateRule(id: number, data: {
   chapter_content_rule?: string
 }) {
   return request({
-    url: `/rule/${id}`,
-    method: 'put',
+    url: `/rule/update/${id}`,
+    method: 'post',
     data
   })
 }
@@ -58,7 +58,7 @@ export function updateRule(id: number, data: {
 // 删除规则
 export function deleteRule(id: number) {
   return request({
-    url: `/rule/${id}`,
-    method: 'delete'
+    url: `/rule/delete/${id}`,
+    method: 'post'
   })
 }

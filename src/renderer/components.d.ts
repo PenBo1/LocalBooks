@@ -39,6 +39,7 @@ declare module 'vue' {
     NovelCard: typeof import('./src/components/NovelCard.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    TitleBar: typeof import('./src/components/TitleBar.vue')['default']
     Versions: typeof import('./src/components/Versions.vue')['default']
   }
 }

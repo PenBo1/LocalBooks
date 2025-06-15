@@ -169,6 +169,8 @@ onMounted(() => {
 
 .search-container {
   margin-bottom: 30px;
+  display: flex;
+  justify-content: center;
 
   .search-input {
     width: 100%;

@@ -1,77 +1,83 @@
 <template>
   <div class="app-container">
-    <!-- 左侧导航栏 -->
-    <div class="sidebar">
-      <div class="logo">
-        <h1>LocalNovel</h1>
-      </div>
-      <el-menu
-        :default-active="activeMenu"
-        class="sidebar-menu"
-        :router="true"
-        :collapse="isCollapse"
-      >
-        <el-menu-item v-for="route in routes" :key="route.path" :index="route.path">
-          <el-icon>
-            <component :is="route.meta?.icon" />
-          </el-icon>
-          <template #title>{{ route.meta?.title }}</template>
-        </el-menu-item>
-      </el-menu>
-      <div class="sidebar-footer">
-        <el-tooltip content="折叠/展开" placement="right">
-          <el-button
-            class="collapse-btn"
-            :icon="isCollapse ? 'Expand' : 'Fold'"
-            circle
-            @click="toggleCollapse"
-          />
-        </el-tooltip>
-      </div>
-    </div>
-
-    <!-- 右侧内容区域 -->
-    <div class="main-container">
-      <!-- 顶部导航栏 -->
-      <div class="navbar">
-        <div class="navbar-left">
-          <el-breadcrumb separator="/">
-            <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>{{ currentRoute?.meta?.title }}</el-breadcrumb-item>
-          </el-breadcrumb>
+    <!-- 自定义标题栏 -->
+    <TitleBar />
+    
+    <!-- 主内容区域的布局容器 -->
+    <div class="content-container">
+      <!-- 左侧导航栏 -->
+      <div class="sidebar">
+        <div class="logo">
+          <h1>LocalBooks</h1>
         </div>
-        <div class="navbar-right">
-          <el-dropdown>
-            <span class="el-dropdown-link">
-              主题
-              <el-icon class="el-icon--right">
-                <arrow-down />
-              </el-icon>
-            </span>
-            <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item
-                  v-for="option in themeOptions"
-                  :key="option.value"
-                  @click="changeTheme(option.value)"
-                >
-                  {{ option.label }}
-                </el-dropdown-item>
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown>
+        <el-menu
+          :default-active="activeMenu"
+          class="sidebar-menu"
+          :router="true"
+          :collapse="isCollapse"
+        >
+          <el-menu-item v-for="route in routes" :key="route.path" :index="route.path">
+            <el-icon>
+              <component :is="route.meta?.icon" />
+            </el-icon>
+            <template #title>{{ route.meta?.title }}</template>
+          </el-menu-item>
+        </el-menu>
+        <div class="sidebar-footer">
+          <el-tooltip content="折叠/展开" placement="right">
+            <el-button
+              class="collapse-btn"
+              :icon="isCollapse ? 'Expand' : 'Fold'"
+              circle
+              @click="toggleCollapse"
+            />
+          </el-tooltip>
         </div>
       </div>
 
-      <!-- 内容区域 -->
-      <div class="app-main">
-        <router-view v-slot="{ Component }">
-          <transition name="fade" mode="out-in">
-            <keep-alive :include="cachedViews">
-              <component :is="Component" />
-            </keep-alive>
-          </transition>
-        </router-view>
+      <!-- 右侧内容区域 -->
+      <div class="main-container">
+        <!-- 顶部导航栏 -->
+        <div class="navbar">
+          <div class="navbar-left">
+            <el-breadcrumb separator="/">
+              <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+              <el-breadcrumb-item>{{ currentRoute?.meta?.title }}</el-breadcrumb-item>
+            </el-breadcrumb>
+          </div>
+          <div class="navbar-right">
+            <el-dropdown>
+              <span class="el-dropdown-link">
+                主题
+                <el-icon class="el-icon--right">
+                  <arrow-down />
+                </el-icon>
+              </span>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item
+                    v-for="option in themeOptions"
+                    :key="option.value"
+                    @click="changeTheme(option.value)"
+                  >
+                    {{ option.label }}
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+          </div>
+        </div>
+
+        <!-- 内容区域 -->
+        <div class="app-main">
+          <router-view v-slot="{ Component }">
+            <transition name="fade" mode="out-in">
+              <keep-alive :include="cachedViews">
+                <component :is="Component" />
+              </keep-alive>
+            </transition>
+          </router-view>
+        </div>
       </div>
     </div>
   </div>
@@ -82,6 +88,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ArrowDown } from '@element-plus/icons-vue'
 import { useSettingsStore } from '@/store/settings'
+import TitleBar from '@/components/TitleBar.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -133,8 +140,16 @@ onMounted(() => {
 <style scoped lang="scss">
 .app-container {
   display: flex;
+  flex-direction: column;
   height: 100vh;
   width: 100vw;
+  overflow: hidden;
+}
+
+/* 主内容区域的布局容器 */
+.content-container {
+  display: flex;
+  flex: 1;
   overflow: hidden;
 }
 

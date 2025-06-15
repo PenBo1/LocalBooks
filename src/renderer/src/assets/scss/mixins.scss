@@ -1,0 +1,155 @@
+// 主题混合器
+
+// 生成主题CSS变量
+@mixin generate-theme-vars($theme-map) {
+  // 基础颜色
+  --app-bg-color: #{map-get($theme-map, bg-color)};
+  --app-bg-color-secondary: #{map-get($theme-map, bg-color-secondary)};
+  --app-text-color-primary: #{map-get($theme-map, text-color-primary)};
+  --app-text-color-secondary: #{map-get($theme-map, text-color-secondary)};
+  --app-text-color-placeholder: #{map-get($theme-map, text-color-placeholder)};
+  --app-border-color: #{map-get($theme-map, border-color)};
+  --app-border-color-light: #{map-get($theme-map, border-color-light)};
+  --app-fill-color: #{map-get($theme-map, fill-color)};
+  --app-fill-color-light: #{map-get($theme-map, fill-color-light)};
+  
+  // 主题色
+  --app-color-primary: #{map-get($theme-map, primary-color)};
+  --app-color-success: #{map-get($theme-map, success-color)};
+  --app-color-warning: #{map-get($theme-map, warning-color)};
+  --app-color-danger: #{map-get($theme-map, danger-color)};
+  --app-color-info: #{map-get($theme-map, info-color)};
+  
+  // 阅读相关
+  --app-reading-bg-color: #{map-get($theme-map, reading-bg-color)};
+  --app-reading-text-color: #{map-get($theme-map, reading-text-color)};
+  
+  // Element Plus 变量
+  --el-bg-color: #{map-get($theme-map, bg-color)};
+  --el-bg-color-page: #{lighten(map-get($theme-map, bg-color), 2%)};
+  --el-bg-color-overlay: #{map-get($theme-map, bg-color)};
+  
+  --el-text-color-primary: #{map-get($theme-map, text-color-primary)};
+  --el-text-color-regular: #{map-get($theme-map, text-color-secondary)};
+  --el-text-color-secondary: #{map-get($theme-map, text-color-secondary)};
+  --el-text-color-placeholder: #{map-get($theme-map, text-color-placeholder)};
+  --el-text-color-disabled: #{lighten(map-get($theme-map, text-color-secondary), 30%)};
+  
+  --el-border-color: #{map-get($theme-map, border-color)};
+  --el-border-color-light: #{map-get($theme-map, border-color-light)};
+  --el-border-color-lighter: #{lighten(map-get($theme-map, border-color-light), 10%)};
+  --el-border-color-extra-light: #{lighten(map-get($theme-map, border-color-light), 20%)};
+  
+  --el-fill-color: #{map-get($theme-map, fill-color)};
+  --el-fill-color-light: #{map-get($theme-map, fill-color-light)};
+  --el-fill-color-lighter: #{lighten(map-get($theme-map, fill-color-light), 5%)};
+  --el-fill-color-extra-light: #{lighten(map-get($theme-map, fill-color-light), 10%)};
+  --el-fill-color-blank: #{map-get($theme-map, bg-color)};
+  
+  --el-color-primary: #{map-get($theme-map, primary-color)};
+  --el-color-success: #{map-get($theme-map, success-color)};
+  --el-color-warning: #{map-get($theme-map, warning-color)};
+  --el-color-danger: #{map-get($theme-map, danger-color)};
+  --el-color-info: #{map-get($theme-map, info-color)};
+  
+  // 派生变量
+  --el-color-primary-light-3: #{lighten(map-get($theme-map, primary-color), 10%)};
+  --el-color-primary-light-5: #{lighten(map-get($theme-map, primary-color), 20%)};
+  --el-color-primary-light-7: #{lighten(map-get($theme-map, primary-color), 30%)};
+  --el-color-primary-light-8: #{lighten(map-get($theme-map, primary-color), 35%)};
+  --el-color-primary-light-9: #{lighten(map-get($theme-map, primary-color), 40%)};
+  --el-color-primary-dark-2: #{darken(map-get($theme-map, primary-color), 10%)};
+  
+  // 成功色派生
+  --el-color-success-light-3: #{lighten(map-get($theme-map, success-color), 10%)};
+  --el-color-success-light-5: #{lighten(map-get($theme-map, success-color), 20%)};
+  --el-color-success-light-7: #{lighten(map-get($theme-map, success-color), 30%)};
+  --el-color-success-light-8: #{lighten(map-get($theme-map, success-color), 35%)};
+  --el-color-success-light-9: #{lighten(map-get($theme-map, success-color), 40%)};
+  --el-color-success-dark-2: #{darken(map-get($theme-map, success-color), 10%)};
+  
+  // 警告色派生
+  --el-color-warning-light-3: #{lighten(map-get($theme-map, warning-color), 10%)};
+  --el-color-warning-light-5: #{lighten(map-get($theme-map, warning-color), 20%)};
+  --el-color-warning-light-7: #{lighten(map-get($theme-map, warning-color), 30%)};
+  --el-color-warning-light-8: #{lighten(map-get($theme-map, warning-color), 35%)};
+  --el-color-warning-light-9: #{lighten(map-get($theme-map, warning-color), 40%)};
+  --el-color-warning-dark-2: #{darken(map-get($theme-map, warning-color), 10%)};
+  
+  // 危险色派生
+  --el-color-danger-light-3: #{lighten(map-get($theme-map, danger-color), 10%)};
+  --el-color-danger-light-5: #{lighten(map-get($theme-map, danger-color), 20%)};
+  --el-color-danger-light-7: #{lighten(map-get($theme-map, danger-color), 30%)};
+  --el-color-danger-light-8: #{lighten(map-get($theme-map, danger-color), 35%)};
+  --el-color-danger-light-9: #{lighten(map-get($theme-map, danger-color), 40%)};
+  --el-color-danger-dark-2: #{darken(map-get($theme-map, danger-color), 10%)};
+  
+  // 信息色派生
+  --el-color-info-light-3: #{lighten(map-get($theme-map, info-color), 10%)};
+  --el-color-info-light-5: #{lighten(map-get($theme-map, info-color), 20%)};
+  --el-color-info-light-7: #{lighten(map-get($theme-map, info-color), 30%)};
+  --el-color-info-light-8: #{lighten(map-get($theme-map, info-color), 35%)};
+  --el-color-info-light-9: #{lighten(map-get($theme-map, info-color), 40%)};
+  --el-color-info-dark-2: #{darken(map-get($theme-map, info-color), 10%)};
+  
+  // 禁用状态
+  --el-disabled-bg-color: #{map-get($theme-map, fill-color-light)};
+  --el-disabled-text-color: #{lighten(map-get($theme-map, text-color-secondary), 20%)};
+  --el-disabled-border-color: #{lighten(map-get($theme-map, border-color-light), 10%)};
+}
+
+// 响应式断点
+@mixin mobile {
+  @media (max-width: 767px) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (min-width: 768px) and (max-width: 1023px) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: 1024px) {
+    @content;
+  }
+}
+
+// 文本溢出省略号
+@mixin text-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@mixin multi-line-ellipsis($lines) {
+  display: -webkit-box;
+  -webkit-line-clamp: $lines;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// 滚动条样式
+@mixin custom-scrollbar {
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--el-fill-color-light);
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--el-border-color-darker);
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--el-text-color-secondary);
+  }
+}

@@ -1,233 +1,314 @@
 <template>
   <div class="settings-container">
-    <el-card class="settings-card">
-      <template #header>
-        <div class="card-header">
-          <h2>应用设置</h2>
-          <div class="header-actions">
-            <el-button type="primary" @click="saveSettings">
-              <el-icon><Check /></el-icon>
-              保存设置
-            </el-button>
-            <el-button @click="resetSettings">
-              <el-icon><RefreshRight /></el-icon>
-              重置默认
-            </el-button>
+    <!-- 页面标题 -->
+    <div class="page-header">
+      <h1 class="page-title">
+        <el-icon><Setting /></el-icon>
+        应用设置
+      </h1>
+      <div class="header-actions">
+        <el-button type="primary" @click="saveSettings" :loading="saveLoading">
+          <el-icon><Check /></el-icon>
+          保存设置
+        </el-button>
+        <el-button @click="resetSettings" :loading="resetLoading">
+          <el-icon><RefreshLeft /></el-icon>
+          重置默认
+        </el-button>
+      </div>
+    </div>
+
+    <!-- 设置内容 -->
+    <div class="settings-content">
+      <!-- 主题设置 -->
+      <el-card class="setting-card" shadow="hover">
+        <template #header>
+          <div class="card-header">
+            <el-icon class="card-icon"><Brush /></el-icon>
+            <span class="card-title">主题设置</span>
           </div>
-        </div>
-      </template>
-
-      <el-form label-position="top" :model="form" class="settings-form">
-        <!-- 主题设置 -->
-        <el-divider content-position="left">
-          <el-icon><Brush /></el-icon>
-          主题设置
-        </el-divider>
-
-        <el-form-item label="主题">
-          <el-radio-group v-model="form.theme" class="theme-options">
-            <el-radio-button
-              v-for="option in themeOptions"
-              :key="option.value"
-              :label="option.value"
+        </template>
+        <div class="theme-section">
+          <div class="theme-grid">
+            <div 
+              v-for="theme in themeOptions" 
+              :key="theme.value"
               class="theme-option"
+              :class="{ active: form.theme === theme.value }"
+              @click="form.theme = theme.value"
             >
-              <div class="theme-preview" :class="`theme-${option.value}`">
-                <span>{{ option.label }}</span>
+              <div class="theme-preview" :style="{ backgroundColor: theme.color }">
+                <div class="theme-preview-content">
+                  <div class="preview-text">Aa</div>
+                  <div class="preview-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                </div>
               </div>
-            </el-radio-button>
-          </el-radio-group>
-        </el-form-item>
-
-        <!-- 阅读设置 -->
-        <el-divider content-position="left">
-          <el-icon><Reading /></el-icon>
-          阅读设置
-        </el-divider>
-
-        <div class="form-row">
-          <el-form-item label="字体大小">
-            <div class="slider-with-value">
-              <el-slider
-                v-model="form.fontSize"
-                :min="12"
-                :max="28"
-                :step="1"
-                show-stops
-              />
-              <div class="slider-value">{{ form.fontSize }}px</div>
+              <div class="theme-name">{{ theme.label }}</div>
+              <el-icon v-if="form.theme === theme.value" class="theme-check"><Check /></el-icon>
             </div>
-          </el-form-item>
-
-          <el-form-item label="字体">
-            <el-select v-model="form.fontFamily" placeholder="选择字体">
-              <el-option
-                v-for="font in fontOptions"
-                :key="font.value"
-                :label="font.label"
-                :value="font.value"
-                :style="{ fontFamily: font.value }"
-              />
-            </el-select>
-          </el-form-item>
-        </div>
-
-        <div class="form-row">
-          <el-form-item label="行距">
-            <div class="slider-with-value">
-              <el-slider
-                v-model="form.lineHeight"
-                :min="1"
-                :max="3"
-                :step="0.1"
-                show-stops
-              />
-              <div class="slider-value">{{ form.lineHeight }}</div>
-            </div>
-          </el-form-item>
-
-          <el-form-item label="段落间距">
-            <div class="slider-with-value">
-              <el-slider
-                v-model="form.paragraphSpacing"
-                :min="0.5"
-                :max="3"
-                :step="0.1"
-                show-stops
-              />
-              <div class="slider-value">{{ form.paragraphSpacing }}em</div>
-            </div>
-          </el-form-item>
-        </div>
-
-        <!-- 缓存设置 -->
-        <el-divider content-position="left">
-          <el-icon><Files /></el-icon>
-          缓存设置
-        </el-divider>
-
-        <div class="form-row">
-          <el-form-item label="启用缓存">
-            <el-switch v-model="form.enableCache" />
-          </el-form-item>
-
-          <el-form-item label="缓存过期时间(天)">
-            <el-input-number
-              v-model="form.cacheExpiration"
-              :min="1"
-              :max="30"
-              :disabled="!form.enableCache"
-            />
-          </el-form-item>
-        </div>
-
-        <el-form-item label="缓存大小限制(MB)">
-          <div class="slider-with-value">
-            <el-slider
-              v-model="form.cacheSize"
-              :min="100"
-              :max="1000"
-              :step="100"
-              show-stops
-              :disabled="!form.enableCache"
-            />
-            <div class="slider-value">{{ form.cacheSize }}MB</div>
           </div>
-        </el-form-item>
+        </div>
+      </el-card>
 
-        <el-form-item>
-          <el-button type="warning" @click="clearCache" :disabled="!form.enableCache">
-            <el-icon><Delete /></el-icon>
-            清除缓存
-          </el-button>
-          <span class="cache-info" v-if="cacheInfo">当前缓存大小: {{ cacheInfo }}</span>
-        </el-form-item>
+      <!-- 阅读设置 -->
+      <el-card class="setting-card" shadow="hover">
+        <template #header>
+          <div class="card-header">
+            <el-icon class="card-icon"><Reading /></el-icon>
+            <span class="card-title">阅读设置</span>
+          </div>
+        </template>
+        <div class="reading-settings">
+          <div class="setting-row">
+            <div class="setting-item">
+              <label class="setting-label">字体大小</label>
+              <div class="slider-container">
+                <el-slider 
+                  v-model="form.font_size" 
+                  :min="12" 
+                  :max="24" 
+                  :step="1"
+                  show-input
+                  input-size="small"
+                  class="custom-slider"
+                />
+                <span class="unit">px</span>
+              </div>
+            </div>
+            <div class="setting-item">
+              <label class="setting-label">字体</label>
+              <el-select v-model="form.font_family" placeholder="选择字体" class="font-select">
+                <el-option 
+                  v-for="font in fontOptions" 
+                  :key="font.value" 
+                  :label="font.label" 
+                  :value="font.value"
+                />
+              </el-select>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-item">
+              <label class="setting-label">行距</label>
+              <div class="slider-container">
+                <el-slider 
+                  v-model="form.line_height" 
+                  :min="1.0" 
+                  :max="3.0" 
+                  :step="0.1"
+                  show-input
+                  input-size="small"
+                  class="custom-slider"
+                />
+              </div>
+            </div>
+            <div class="setting-item">
+              <label class="setting-label">段落间距</label>
+              <div class="slider-container">
+                <el-slider 
+                  v-model="form.paragraph_spacing" 
+                  :min="0" 
+                  :max="20" 
+                  :step="1"
+                  show-input
+                  input-size="small"
+                  class="custom-slider"
+                />
+                <span class="unit">px</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </el-card>
 
-        <!-- 日志设置 -->
-        <el-divider content-position="left">
-          <el-icon><Document /></el-icon>
-          日志设置
-        </el-divider>
+      <!-- 缓存设置 -->
+      <el-card class="setting-card" shadow="hover">
+        <template #header>
+          <div class="card-header">
+            <el-icon class="card-icon"><FolderOpened /></el-icon>
+            <span class="card-title">缓存设置</span>
+          </div>
+        </template>
+        <div class="cache-settings">
+          <div class="setting-row">
+            <div class="setting-item full-width">
+              <div class="switch-item">
+                <label class="setting-label">启用缓存</label>
+                <el-switch v-model="form.cache_enabled" />
+              </div>
+            </div>
+          </div>
+          <div class="setting-row" v-if="form.cache_enabled">
+            <div class="setting-item">
+              <label class="setting-label">缓存过期时间</label>
+              <div class="slider-container">
+                <el-slider 
+                  v-model="form.cache_expiration" 
+                  :min="3600" 
+                  :max="604800" 
+                  :step="3600"
+                  show-input
+                  input-size="small"
+                  class="custom-slider"
+                />
+                <span class="unit">秒</span>
+              </div>
+            </div>
+            <div class="setting-item">
+              <label class="setting-label">缓存大小限制</label>
+              <div class="slider-container">
+                <el-slider 
+                  v-model="form.cache_size_limit" 
+                  :min="100" 
+                  :max="2000" 
+                  :step="100"
+                  show-input
+                  input-size="small"
+                  class="custom-slider"
+                />
+                <span class="unit">MB</span>
+              </div>
+            </div>
+          </div>
+          <div class="setting-row" v-if="form.cache_enabled">
+            <div class="cache-actions">
+              <el-button type="warning" @click="clearCache" :loading="clearCacheLoading">
+                <el-icon><Delete /></el-icon>
+                清除缓存
+              </el-button>
+              <div class="cache-info">
+                <div class="cache-stat">
+                  <span class="stat-label">缓存大小:</span>
+                  <span class="stat-value">{{ cacheInfo.size }}</span>
+                </div>
+                <div class="cache-stat">
+                  <span class="stat-label">缓存文件数:</span>
+                  <span class="stat-value">{{ cacheInfo.count }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </el-card>
 
-        <el-form-item label="日志等级">
-          <el-select v-model="form.logLevel" placeholder="选择日志等级">
-            <el-option
-              v-for="level in logLevelOptions"
-              :key="level.value"
-              :label="level.label"
-              :value="level.value"
-            />
-          </el-select>
-        </el-form-item>
-
-        <el-form-item label="日志保留天数">
-          <el-input-number v-model="form.logRetention" :min="1" :max="30" />
-        </el-form-item>
-
-        <el-form-item>
-          <el-button @click="openLogFolder">
-            <el-icon><Folder /></el-icon>
-            打开日志文件夹
-          </el-button>
-        </el-form-item>
-      </el-form>
-    </el-card>
+      <!-- 日志设置 -->
+      <el-card class="setting-card" shadow="hover">
+        <template #header>
+          <div class="card-header">
+            <el-icon class="card-icon"><Document /></el-icon>
+            <span class="card-title">日志设置</span>
+          </div>
+        </template>
+        <div class="log-settings">
+          <div class="setting-row">
+            <div class="setting-item">
+              <label class="setting-label">日志等级</label>
+              <el-select v-model="form.log_level" placeholder="选择日志等级" class="log-select">
+                <el-option 
+                  v-for="level in logLevelOptions" 
+                  :key="level.value" 
+                  :label="level.label" 
+                  :value="level.value"
+                />
+              </el-select>
+            </div>
+            <div class="setting-item">
+              <label class="setting-label">日志保留天数</label>
+              <div class="slider-container">
+                <el-slider 
+                  v-model="form.log_retention_days" 
+                  :min="1" 
+                  :max="30" 
+                  :step="1"
+                  show-input
+                  input-size="small"
+                  class="custom-slider"
+                />
+                <span class="unit">天</span>
+              </div>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="log-actions">
+              <el-button type="info" @click="openLogFolder">
+                <el-icon><FolderOpened /></el-icon>
+                打开日志文件夹
+              </el-button>
+            </div>
+          </div>
+        </div>
+      </el-card>
+    </div>
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Check, RefreshRight, Brush, Reading, Files, Delete, Document, Folder } from '@element-plus/icons-vue'
+import { 
+  Setting, 
+  Check, 
+  RefreshLeft, 
+  Brush, 
+  Reading, 
+  FolderOpened, 
+  Document, 
+  Delete 
+} from '@element-plus/icons-vue'
 import { getSettings, updateSetting, resetToDefault } from '@/api/settings'
 import { useSettingsStore } from '@/store/settings'
 
 const settingsStore = useSettingsStore()
 
-// 表单数据
+// 响应式数据
+const saveLoading = ref(false)
+const resetLoading = ref(false)
+const clearCacheLoading = ref(false)
+
 const form = reactive({
   theme: 'light',
-  fontSize: 16,
-  fontFamily: 'Microsoft YaHei',
-  lineHeight: 1.5,
-  paragraphSpacing: 1.2,
-  enableCache: true,
-  cacheExpiration: 7,
-  cacheSize: 500,
-  logLevel: 'info',
-  logRetention: 7
+  font_size: 16,
+  font_family: 'Microsoft YaHei, sans-serif',
+  line_height: 1.5,
+  paragraph_spacing: 10,
+  cache_enabled: true,
+  cache_expiration: 86400,
+  cache_size_limit: 500,
+  log_level: 'INFO',
+  log_retention_days: 7
 })
 
-// 缓存信息
-const cacheInfo = ref('')
+const cacheInfo = reactive({
+  size: '0 MB',
+  count: 0
+})
 
-// 主题选项
+// 选项数据
 const themeOptions = [
-  { label: '浅色', value: 'light' },
-  { label: '深色', value: 'dark' },
-  { label: '护眼', value: 'eye-protection' },
-  { label: '浅黄', value: 'light-yellow' },
-  { label: '粉色', value: 'pink' }
+  { label: '浅色', value: 'light', color: '#ffffff' },
+  { label: '深色', value: 'dark', color: '#1a1a1a' },
+  { label: '护眼', value: 'green', color: '#c7edcc' },
+  { label: '浅黄', value: 'yellow', color: '#fef7cd' },
+  { label: '粉色', value: 'pink', color: '#fce4ec' }
 ]
 
-// 字体选项
 const fontOptions = [
-  { label: '微软雅黑', value: 'Microsoft YaHei' },
-  { label: '宋体', value: 'SimSun' },
-  { label: '黑体', value: 'SimHei' },
-  { label: '楷体', value: 'KaiTi' },
-  { label: '仿宋', value: 'FangSong' },
-  { label: '思源宋体', value: 'Source Han Serif' },
-  { label: '思源黑体', value: 'Source Han Sans' }
+  { label: '微软雅黑', value: 'Microsoft YaHei, sans-serif' },
+  { label: '宋体', value: 'SimSun, serif' },
+  { label: '黑体', value: 'SimHei, sans-serif' },
+  { label: '楷体', value: 'KaiTi, serif' },
+  { label: '仿宋', value: 'FangSong, serif' }
 ]
 
-// 日志等级选项
 const logLevelOptions = [
-  { label: '调试', value: 'debug' },
-  { label: '信息', value: 'info' },
-  { label: '警告', value: 'warning' },
-  { label: '错误', value: 'error' },
-  { label: '严重错误', value: 'critical' }
+  { label: 'DEBUG', value: 'DEBUG' },
+  { label: 'INFO', value: 'INFO' },
+  { label: 'WARNING', value: 'WARNING' },
+  { label: 'ERROR', value: 'ERROR' }
 ]
 
 // 加载设置
@@ -235,39 +316,49 @@ const loadSettings = async () => {
   try {
     const response = await getSettings()
     const settings = response.data
-
-    // 将设置应用到表单
+    
+    // 更新表单数据
     Object.keys(form).forEach(key => {
-      if (key in settings) {
-        form[key] = settings[key]
+      if (settings[key] !== undefined) {
+        if (key === 'cache_enabled') {
+          form[key] = settings[key] === 'true' || settings[key] === true
+        } else if (['font_size', 'line_height', 'paragraph_spacing', 'cache_expiration', 'cache_size_limit', 'log_retention_days'].includes(key)) {
+          form[key] = Number(settings[key])
+        } else {
+          form[key] = settings[key]
+        }
       }
     })
-
-    // 获取缓存信息
-    if (settings.cache_info) {
-      cacheInfo.value = settings.cache_info
-    }
+    
+    // 应用主题到store
+    settingsStore.setTheme(form.theme)
   } catch (error) {
     console.error('加载设置失败:', error)
-    ElMessage.error('加载设置失败，请稍后重试')
+    ElMessage.error('加载设置失败')
   }
 }
 
 // 保存设置
 const saveSettings = async () => {
+  saveLoading.value = true
   try {
-    // 保存每个设置项
+    // 遍历表单项，逐个更新
     for (const [key, value] of Object.entries(form)) {
       await updateSetting(key, value)
     }
-
-    // 更新全局设置状态
-    settingsStore.setSettings(form)
-
+    
+    // 更新全局状态
+    settingsStore.setTheme(form.theme)
+    settingsStore.setFontSize(form.font_size)
+    settingsStore.setFontFamily(form.font_family)
+    settingsStore.setLineHeight(form.line_height)
+    
     ElMessage.success('设置保存成功')
   } catch (error) {
     console.error('保存设置失败:', error)
-    ElMessage.error('保存设置失败，请稍后重试')
+    ElMessage.error('保存设置失败')
+  } finally {
+    saveLoading.value = false
   }
 }
 
@@ -275,27 +366,26 @@ const saveSettings = async () => {
 const resetSettings = async () => {
   try {
     await ElMessageBox.confirm(
-      '确定要将所有设置重置为默认值吗？此操作不可恢复！',
-      '重置确认',
+      '确定要重置为默认设置吗？这将覆盖所有当前设置。',
+      '确认重置',
       {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }
     )
-
+    
+    resetLoading.value = true
     await resetToDefault()
     await loadSettings()
-    
-    // 更新全局设置状态
-    settingsStore.loadSettings()
-    
-    ElMessage.success('设置已重置为默认值')
+    ElMessage.success('已重置为默认设置')
   } catch (error) {
     if (error !== 'cancel') {
       console.error('重置设置失败:', error)
-      ElMessage.error('重置设置失败，请稍后重试')
+      ElMessage.error('重置设置失败')
     }
+  } finally {
+    resetLoading.value = false
   }
 }
 
@@ -303,165 +393,341 @@ const resetSettings = async () => {
 const clearCache = async () => {
   try {
     await ElMessageBox.confirm(
-      '确定要清除所有缓存吗？这将删除所有已缓存的小说内容。',
-      '清除缓存',
+      '确定要清除所有缓存吗？',
+      '确认清除',
       {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }
     )
-
+    
+    clearCacheLoading.value = true
     await updateSetting('clear_cache', true)
-    cacheInfo.value = '0 KB'
-    ElMessage.success('缓存已清除')
+    
+    // 更新缓存信息
+    cacheInfo.size = '0 MB'
+    cacheInfo.count = 0
+    
+    ElMessage.success('缓存清除成功')
   } catch (error) {
     if (error !== 'cancel') {
       console.error('清除缓存失败:', error)
-      ElMessage.error('清除缓存失败，请稍后重试')
+      ElMessage.error('清除缓存失败')
     }
+  } finally {
+    clearCacheLoading.value = false
   }
 }
 
 // 打开日志文件夹
 const openLogFolder = () => {
-  // 使用Electron的shell.openPath打开日志文件夹
-  window.electron?.ipcRenderer.send('open-log-folder')
+  if (window.electronAPI) {
+    window.electronAPI.openLogFolder()
+  } else {
+    ElMessage.warning('此功能仅在桌面应用中可用')
+  }
 }
 
+// 组件挂载时加载设置
 onMounted(() => {
   loadSettings()
 })
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .settings-container {
   padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: #f5f7fa;
+  min-height: 100vh;
 }
 
-.settings-card {
-  max-width: 900px;
-  margin: 0 auto;
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding: 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+.page-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #303133;
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.settings-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.setting-card {
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
 }
 
 .card-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-
-  h2 {
-    margin: 0;
-    font-size: 20px;
-    font-weight: 600;
+  gap: 8px;
+  font-weight: 600;
+  color: #303133;
+  
+  .card-icon {
+    font-size: 18px;
+    color: #409eff;
   }
-
-  .header-actions {
-    display: flex;
-    gap: 10px;
+  
+  .card-title {
+    font-size: 16px;
   }
 }
 
-.settings-form {
-  .el-divider {
-    margin: 30px 0 20px;
+/* 主题设置样式 */
+.theme-section {
+  padding: 20px 0;
+}
 
-    :deep(.el-divider__text) {
-      display: flex;
-      align-items: center;
-      font-size: 16px;
-      font-weight: 600;
+.theme-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 16px;
+}
 
-      .el-icon {
-        margin-right: 8px;
-      }
-    }
+.theme-option {
+  position: relative;
+  cursor: pointer;
+  border-radius: 12px;
+  padding: 16px;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+  background: #fafafa;
+  
+  &:hover {
+    border-color: #409eff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(64, 158, 255, 0.2);
   }
-
-  .form-row {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
+  
+  &.active {
+    border-color: #409eff;
+    background: #ecf5ff;
   }
-
-  .slider-with-value {
-    display: flex;
-    align-items: center;
-
-    .el-slider {
-      flex: 1;
-      margin-right: 15px;
-    }
-
-    .slider-value {
-      width: 60px;
+  
+  .theme-preview {
+    width: 100%;
+    height: 80px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    
+    .theme-preview-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
       text-align: center;
-      color: var(--el-text-color-secondary);
-    }
-  }
-
-  .theme-options {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-
-    .theme-option {
-      :deep(.el-radio-button__inner) {
-        padding: 0;
-        border: none;
-        height: auto;
-        background: none;
-      }
-
-      .theme-preview {
-        width: 120px;
-        height: 80px;
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+      
+      .preview-text {
+        font-size: 18px;
         font-weight: bold;
-        transition: transform 0.2s;
-        border: 2px solid transparent;
-
-        &:hover {
-          transform: scale(1.05);
+        color: #333;
+        margin-bottom: 8px;
+      }
+      
+      .preview-dots {
+        display: flex;
+        gap: 4px;
+        justify-content: center;
+        
+        span {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background: #666;
+          opacity: 0.6;
         }
       }
-
-      &.is-active .theme-preview {
-        border-color: var(--el-color-primary);
-      }
-
-      .theme-light {
-        background-color: #ffffff;
-        color: #303133;
-      }
-
-      .theme-dark {
-        background-color: #303133;
-        color: #e6e6e6;
-      }
-
-      .theme-eye-protection {
-        background-color: #c9e6cd;
-        color: #333333;
-      }
-
-      .theme-light-yellow {
-        background-color: #fdf6e3;
-        color: #586e75;
-      }
-
-      .theme-pink {
-        background-color: #fce4ec;
-        color: #880e4f;
-      }
     }
   }
+  
+  .theme-name {
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+    color: #606266;
+  }
+  
+  .theme-check {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    color: #409eff;
+    font-size: 16px;
+    background: white;
+    border-radius: 50%;
+    padding: 2px;
+  }
+}
 
+/* 设置行样式 */
+.reading-settings,
+.cache-settings,
+.log-settings {
+  padding: 20px 0;
+}
+
+.setting-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.setting-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  
+  &.full-width {
+    grid-column: 1 / -1;
+  }
+  
+  .setting-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #606266;
+    margin-bottom: 8px;
+  }
+}
+
+.slider-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  
+  .custom-slider {
+    flex: 1;
+  }
+  
+  .unit {
+    font-size: 12px;
+    color: #909399;
+    min-width: 24px;
+  }
+}
+
+.switch-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+}
+
+.font-select,
+.log-select {
+  width: 100%;
+}
+
+/* 缓存和日志操作样式 */
+.cache-actions,
+.log-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.cache-info {
+  display: flex;
+  gap: 20px;
+  margin-left: auto;
+  
+  .cache-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    
+    .stat-label {
+      font-size: 12px;
+      color: #909399;
+    }
+    
+    .stat-value {
+      font-size: 14px;
+      font-weight: 600;
+      color: #303133;
+    }
+  }
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .settings-container {
+    padding: 16px;
+  }
+  
+  .page-header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+  }
+  
+  .header-actions {
+    justify-content: center;
+  }
+  
+  .setting-row {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .theme-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 12px;
+  }
+  
+  .cache-actions,
+  .log-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  
   .cache-info {
-    margin-left: 10px;
-    color: var(--el-text-color-secondary);
+    margin-left: 0;
+    justify-content: center;
   }
 }
 </style>

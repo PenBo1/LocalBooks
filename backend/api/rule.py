@@ -54,7 +54,7 @@ async def create_rule(rule: RuleCreate):
         raise HTTPException(status_code=500, detail="创建规则失败")
 
 
-@router.put("/{rule_id}", response_model=Dict[str, str])
+@router.post("/update/{rule_id}", response_model=Dict[str, str])
 async def update_rule(
     rule_data: Dict[str, Any],
     rule_id: int = Path(..., description="规则ID")
@@ -79,7 +79,7 @@ async def update_rule(
         raise HTTPException(status_code=500, detail="更新规则失败")
 
 
-@router.delete("/{rule_id}", response_model=Dict[str, str])
+@router.post("/delete/{rule_id}", response_model=Dict[str, str])
 async def delete_rule(rule_id: int = Path(..., description="规则ID")):
     """删除规则"""
     try:

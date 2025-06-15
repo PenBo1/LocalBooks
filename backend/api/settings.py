@@ -49,7 +49,7 @@ async def get_setting(key: str = Path(..., description="设置键名")):
         raise HTTPException(status_code=500, detail="获取设置失败")
 
 
-@router.put("/{key}")
+@router.post("/update/{key}")
 async def update_setting(
     value: Any = Body(..., description="设置值"),
     key: str = Path(..., description="设置键名")
@@ -80,7 +80,7 @@ class SettingKeys:
     LOG_LEVEL = "log_level"  # 日志等级
 
 
-@router.get("/default/reset")
+@router.post("/default/reset")
 async def reset_to_default():
     """重置为默认设置"""
     try:

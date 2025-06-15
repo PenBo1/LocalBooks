@@ -64,7 +64,7 @@ async def get_bookshelf(
         raise HTTPException(status_code=500, detail=f"获取书架列表失败: {str(e)}")
 
 
-@router.put("/update/{bookshelf_id}")
+@router.post("/update/{bookshelf_id}")
 async def update_bookshelf(
     bookshelf_id: int = Path(..., description="书架项ID"),
     data: Dict[str, Any] = Body(..., description="更新数据")
@@ -102,7 +102,7 @@ async def update_bookshelf(
         raise HTTPException(status_code=500, detail=f"更新书架项失败: {str(e)}")
 
 
-@router.delete("/remove/{novel_id}")
+@router.post("/remove/{novel_id}")
 async def remove_from_bookshelf(novel_id: int = Path(..., description="小说ID")):
     """从书架移除小说"""
     try:

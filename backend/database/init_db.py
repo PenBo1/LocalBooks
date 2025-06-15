@@ -3,7 +3,7 @@ import aiosqlite
 from loguru import logger
 
 # 数据库文件路径
-DB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "localnovel.db")
+DB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "LocalBooks.db")
 
 # 确保数据目录存在
 os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)

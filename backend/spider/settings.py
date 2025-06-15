@@ -1,6 +1,6 @@
 # Scrapy爬虫设置
 
-BOT_NAME = 'localnovel'
+BOT_NAME = 'LocalBooks'
 
 SPIDER_MODULES = ['spider.spiders']
 NEWCOMER_MODULE = 'spider.spiders'

@@ -2,8 +2,8 @@
   <div class="about-container">
     <div class="about-card">
       <div class="logo-container">
-        <img src="@/assets/logo.svg" alt="LocalNovel Logo" class="logo" />
-        <h1>LocalNovel</h1>
+        <img src="@/assets/LocalBooks.png" alt="LocalBooks Logo" class="logo" />
+        <h1>LocalBooks</h1>
         <div class="version">v{{ version }}</div>
       </div>
 
@@ -12,7 +12,7 @@
       </el-divider>
 
       <div class="description">
-        <p>LocalNovel 是一款功能强大的本地小说阅读软件，专为小说爱好者设计。它提供了丰富的功能，让您可以轻松搜索、阅读和管理您喜爱的小说。</p>
+        <p>LocalBooks 是一款功能强大的本地小说阅读软件，专为小说爱好者设计。它提供了丰富的功能，让您可以轻松搜索、阅读和管理您喜爱的小说。</p>
       </div>
 
       <el-divider>
@@ -105,12 +105,12 @@
       </el-divider>
 
       <div class="author">
-        <p>LocalNovel 是一个开源项目，由热爱阅读和编程的开发者创建。</p>
+        <p>LocalBooks 是一个开源项目，由热爱阅读和编程的开发者创建。</p>
         <p>欢迎提出建议和反馈，帮助我们不断改进这款软件。</p>
       </div>
 
       <div class="copyright">
-        <p>© {{ new Date().getFullYear() }} LocalNovel. All Rights Reserved.</p>
+        <p>© {{ new Date().getFullYear() }} LocalBooks. All Rights Reserved.</p>
       </div>
     </div>
   </div>

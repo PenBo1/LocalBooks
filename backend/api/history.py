@@ -52,7 +52,7 @@ async def add_history(history: HistoryCreate):
         raise HTTPException(status_code=500, detail="添加历史记录失败")
 
 
-@router.delete("/{history_id}")
+@router.post("/delete/{history_id}")
 async def delete_history(history_id: int = Path(..., description="历史记录ID")):
     """删除历史记录"""
     try:
@@ -67,7 +67,7 @@ async def delete_history(history_id: int = Path(..., description="历史记录ID
         raise HTTPException(status_code=500, detail="删除历史记录失败")
 
 
-@router.delete("/novel/{novel_id}")
+@router.post("/delete/novel/{novel_id}")
 async def delete_novel_history(novel_id: int = Path(..., description="小说ID")):
     """删除小说的所有历史记录"""
     try:
@@ -85,7 +85,7 @@ async def delete_novel_history(novel_id: int = Path(..., description="小说ID")
         raise HTTPException(status_code=500, detail="删除小说历史记录失败")
 
 
-@router.delete("/all/clear")
+@router.post("/all/clear")
 async def clear_all_history():
     """清空所有历史记录"""
     try:

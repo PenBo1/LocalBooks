@@ -1,0 +1,171 @@
+// 主题变量
+
+// 浅色主题
+$light-theme: (
+  // 背景颜色
+  bg-color: #ffffff,
+  bg-color-secondary: #f5f7fa,
+  
+  // 文本颜色
+  text-color-primary: #303133,
+  text-color-secondary: #606266,
+  text-color-placeholder: #c0c4cc,
+  
+  // 边框颜色
+  border-color: #dcdfe6,
+  border-color-light: #e4e7ed,
+  
+  // 填充颜色
+  fill-color: #f0f2f5,
+  fill-color-light: #f5f7fa,
+  
+  // 主题色
+  primary-color: #409eff,
+  success-color: #67c23a,
+  warning-color: #e6a23c,
+  danger-color: #f56c6c,
+  info-color: #909399,
+  
+  // 阅读背景和文本
+  reading-bg-color: #ffffff,
+  reading-text-color: #303133
+);
+
+// 深色主题
+$dark-theme: (
+  // 背景颜色
+  bg-color: #303133,
+  bg-color-secondary: #2c2c2c,
+  
+  // 文本颜色
+  text-color-primary: #e6e6e6,
+  text-color-secondary: #a6a6a6,
+  text-color-placeholder: #6c6c6c,
+  
+  // 边框颜色
+  border-color: #4c4d4f,
+  border-color-light: #5e5e5e,
+  
+  // 填充颜色
+  fill-color: #3e3e3e,
+  fill-color-light: #484848,
+  
+  // 主题色
+  primary-color: #409eff,
+  success-color: #67c23a,
+  warning-color: #e6a23c,
+  danger-color: #f56c6c,
+  info-color: #909399,
+  
+  // 阅读背景和文本
+  reading-bg-color: #303133,
+  reading-text-color: #e6e6e6
+);
+
+// 护眼主题
+$eye-protection-theme: (
+  // 背景颜色
+  bg-color: #c7edcc,
+  bg-color-secondary: #d8f5dc,
+  
+  // 文本颜色
+  text-color-primary: #333333,
+  text-color-secondary: #555555,
+  text-color-placeholder: #888888,
+  
+  // 边框颜色
+  border-color: #a8d8ae,
+  border-color-light: #b9e3be,
+  
+  // 填充颜色
+  fill-color: #d8f5dc,
+  fill-color-light: #e5f9e8,
+  
+  // 主题色
+  primary-color: #42b983,
+  success-color: #67c23a,
+  warning-color: #e6a23c,
+  danger-color: #f56c6c,
+  info-color: #909399,
+  
+  // 阅读背景和文本
+  reading-bg-color: #c7edcc,
+  reading-text-color: #333333
+);
+
+// 浅黄主题
+$light-yellow-theme: (
+  // 背景颜色
+  bg-color: #fdf6e3,
+  bg-color-secondary: #f5eed8,
+  
+  // 文本颜色
+  text-color-primary: #586e75,
+  text-color-secondary: #657b83,
+  text-color-placeholder: #93a1a1,
+  
+  // 边框颜色
+  border-color: #eee8d5,
+  border-color-light: #f2ead9,
+  
+  // 填充颜色
+  fill-color: #eee8d5,
+  fill-color-light: #f5f0e0,
+  
+  // 主题色
+  primary-color: #b58900,
+  success-color: #859900,
+  warning-color: #cb4b16,
+  danger-color: #dc322f,
+  info-color: #268bd2,
+  
+  // 阅读背景和文本
+  reading-bg-color: #fdf6e3,
+  reading-text-color: #586e75
+);
+
+// 粉色主题
+$pink-theme: (
+  // 背景颜色
+  bg-color: #fff0f5,
+  bg-color-secondary: #ffe4ee,
+  
+  // 文本颜色
+  text-color-primary: #880e4f,
+  text-color-secondary: #ad1457,
+  text-color-placeholder: #d81b60,
+  
+  // 边框颜色
+  border-color: #f8bbd0,
+  border-color-light: #fce4ec,
+  
+  // 填充颜色
+  fill-color: #f8bbd0,
+  fill-color-light: #fce4ec,
+  
+  // 主题色
+  primary-color: #ec407a,
+  success-color: #66bb6a,
+  warning-color: #ffca28,
+  danger-color: #ef5350,
+  info-color: #42a5f5,
+  
+  // 阅读背景和文本
+  reading-bg-color: #fff0f5,
+  reading-text-color: #880e4f
+);
+
+// 字体设置
+$font-family-default: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+$font-family-serif: "Noto Serif", "Times New Roman", serif;
+$font-family-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+
+// 响应式断点
+$breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1400px
+);

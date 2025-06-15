@@ -26,6 +26,13 @@
             >
               {{ novel.in_bookshelf ? '移出书架' : '加入书架' }}
             </el-button>
+            <el-button 
+              type="warning"
+              @click="downloadChapters"
+              :loading="downloadLoading"
+            >
+              <el-icon><Download /></el-icon> 下载全部章节
+            </el-button>
           </div>
         </div>
       </div>
@@ -91,8 +98,8 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import { Picture, Search } from '@element-plus/icons-vue'
-import { getNovelDetail, getNovelChapters } from '@/api/novel'
+import { Picture, Search, Download } from '@element-plus/icons-vue'
+import { getNovelDetail, getNovelChapters, downloadAllChapters } from '@/api/novel'
 import { addToBookshelf, removeFromBookshelf } from '@/api/bookshelf'
 
 const route = useRoute()
@@ -107,6 +114,7 @@ const chapters = ref([])
 const filteredChapters = ref([])
 const loading = ref(true)
 const bookshelfLoading = ref(false)
+const downloadLoading = ref(false)
 
 // 搜索和排序
 const searchQuery = ref('')
@@ -238,6 +246,27 @@ const toggleBookshelf = async () => {
     ElMessage.error('操作失败，请稍后重试')
   } finally {
     bookshelfLoading.value = false
+  }
+}
+
+// 下载全部章节
+const downloadChapters = async () => {
+  if (!novel.value) return
+  
+  downloadLoading.value = true
+  try {
+    await downloadAllChapters(novelId.value)
+    ElMessage.success('章节下载任务已开始，请稍后查看')
+    
+    // 刷新章节列表以更新下载状态
+    setTimeout(() => {
+      fetchNovelChapters()
+    }, 1000)
+  } catch (error) {
+    console.error('下载章节失败:', error)
+    ElMessage.error('下载失败，请稍后重试')
+  } finally {
+    downloadLoading.value = false
   }
 }
 

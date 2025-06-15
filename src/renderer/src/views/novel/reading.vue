@@ -107,14 +107,17 @@
         <h3>主题</h3>
         <div class="theme-options">
           <div
-            v-for="theme in themeOptions"
-            :key="theme.value"
+            v-for="option in themeOptions"
+            :key="option.value"
             class="theme-option"
-            :class="{ 'active': currentTheme === theme.value }"
-            @click="changeTheme(theme.value)"
+            :class="{ 'active': currentTheme === option.value }"
+            @click="changeTheme(option.value)"
           >
-            <div class="theme-preview" :class="`theme-${theme.value}`">
-              <span>{{ theme.label }}</span>
+            <div class="theme-preview" :class="`theme-${option.value}`">
+              <el-icon v-if="option.icon">
+                <component :is="option.icon" />
+              </el-icon>
+              <span>{{ option.label }}</span>
             </div>
           </div>
         </div>
@@ -219,13 +222,9 @@ const lineHeight = ref(settingsStore.lineHeight)
 const paragraphSpacing = ref(settingsStore.paragraphSpacing)
 
 // 主题选项
-const themeOptions = [
-  { label: '浅色', value: 'light' },
-  { label: '深色', value: 'dark' },
-  { label: '护眼', value: 'eye-protection' },
-  { label: '浅黄', value: 'light-yellow' },
-  { label: '粉色', value: 'pink' }
-]
+const themeOptions = computed(() => {
+  return settingsStore.themeOptions
+})
 
 // 字体选项
 const fontOptions = [
@@ -487,14 +486,17 @@ onUnmounted(() => {
 })
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
+@import '../../assets/scss/variables.scss';
+@import '../../assets/scss/mixins.scss';
+
 .reading-container {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--el-bg-color);
+  background-color: var(--app-reading-bg-color);
   z-index: 100;
   overflow: hidden;
   transition: padding-left 0.3s;
@@ -510,7 +512,7 @@ onUnmounted(() => {
   left: 0;
   right: 0;
   height: 60px;
-  background-color: var(--el-bg-color);
+  background-color: var(--app-bg-color);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: space-between;
@@ -518,7 +520,7 @@ onUnmounted(() => {
   padding: 0 20px;
   z-index: 10;
   transform: translateY(-100%);
-  transition: transform 0.3s;
+  transition: transform 0.3s ease;
   
   &.show {
     transform: translateY(0);
@@ -529,6 +531,14 @@ onUnmounted(() => {
     display: flex;
     align-items: center;
     gap: 15px;
+    
+    .el-button {
+      transition: all 0.3s ease;
+      
+      &:hover {
+        transform: translateY(-2px);
+      }
+    }
   }
   
   .novel-title {
@@ -539,6 +549,11 @@ onUnmounted(() => {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    
+    @include mobile {
+      max-width: 200px;
+      font-size: 16px;
+    }
   }
 }
 
@@ -550,6 +565,8 @@ onUnmounted(() => {
   bottom: 0;
   padding: 20px;
   overflow-y: auto;
+  
+  @include custom-scrollbar;
   
   .loading-container {
     max-width: 800px;
@@ -575,11 +592,12 @@ onUnmounted(() => {
     font-size: var(--reading-font-size, 16px);
     font-family: var(--reading-font-family, 'Microsoft YaHei');
     line-height: var(--reading-line-height, 1.8);
-    color: var(--el-text-color-primary);
+    color: var(--app-reading-text-color);
     
     :deep(p) {
       margin-bottom: var(--reading-paragraph-spacing, 1.2em);
       text-indent: 2em;
+      transition: margin 0.3s ease;
     }
   }
   
@@ -591,6 +609,10 @@ onUnmounted(() => {
     padding: 20px 0;
     border-top: 1px solid var(--el-border-color-light);
   }
+  
+  @include mobile {
+    padding: 15px;
+  }
 }
 
 .reading-sidebar {
@@ -598,64 +620,97 @@ onUnmounted(() => {
   top: 0;
   left: 0;
   width: 300px;
-  height: 100%;
+  height: 100vh;
   background-color: var(--el-bg-color);
-  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
-  z-index: 20;
+  border-right: 1px solid var(--el-border-color-light);
   transform: translateX(-100%);
-  transition: transform 0.3s;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  z-index: 20;
   display: flex;
   flex-direction: column;
+  box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
+  
+  @include mobile {
+    width: 280px;
+  }
   
   &.show {
     transform: translateX(0);
   }
   
   .sidebar-header {
-    height: 60px;
+    padding: 16px;
+    border-bottom: 1px solid var(--el-border-color-light);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 20px;
-    border-bottom: 1px solid var(--el-border-color-light);
     
     h3 {
       margin: 0;
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 600;
+    }
+    
+    .el-button {
+      transition: all 0.3s ease;
+      
+      &:hover {
+        transform: rotate(90deg);
+      }
     }
   }
   
   .sidebar-search {
     padding: 15px;
     border-bottom: 1px solid var(--el-border-color-light);
+    
+    .el-input {
+      .el-input__wrapper {
+        box-shadow: 0 0 0 1px var(--el-border-color) inset;
+        transition: all 0.3s ease;
+        
+        &:hover {
+          box-shadow: 0 0 0 1px var(--el-color-primary-light-3) inset;
+        }
+        
+        &.is-focus {
+          box-shadow: 0 0 0 1px var(--el-color-primary) inset;
+        }
+      }
+    }
   }
   
   .sidebar-content {
     flex: 1;
     overflow-y: auto;
     padding: 15px;
+    @include custom-scrollbar;
+  }
+  
+  .chapter-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
     
-    .chapter-list {
-      .chapter-item {
-        padding: 12px 15px;
-        border-radius: 4px;
-        cursor: pointer;
-        margin-bottom: 5px;
-        transition: background-color 0.2s;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        
-        &:hover {
-          background-color: var(--el-fill-color-light);
-        }
-        
-        &.active {
-          background-color: var(--el-color-primary-light-9);
-          color: var(--el-color-primary);
-          font-weight: 500;
-        }
+    .chapter-item {
+      padding: 12px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-bottom: 5px;
+      transition: all 0.2s ease;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      
+      &:hover {
+        background-color: var(--el-fill-color-light);
+        transform: translateX(5px);
+      }
+      
+      &.active {
+        background-color: var(--el-color-primary-light-9);
+        color: var(--el-color-primary);
+        font-weight: 500;
       }
     }
   }
@@ -668,105 +723,137 @@ onUnmounted(() => {
     margin: 0 0 15px;
     font-size: 16px;
     font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    
+    .el-icon {
+      color: var(--el-color-primary);
+    }
   }
   
   .theme-options {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 12px;
     margin-bottom: 20px;
     
     .theme-option {
       cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      
+      &.active .theme-preview {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        
+        &::after {
+          content: '';
+          position: absolute;
+          top: -5px;
+          right: -5px;
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          background-color: var(--el-color-success);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          font-size: 12px;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+      }
       
       .theme-preview {
         width: 80px;
         height: 50px;
-        border-radius: 6px;
+        border-radius: 8px;
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
-        font-weight: bold;
-        transition: transform 0.2s;
-        border: 2px solid transparent;
+        transition: all 0.3s;
+        gap: 5px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         
         &:hover {
-          transform: scale(1.05);
+          transform: translateY(-3px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
-      }
-      
-      &.active .theme-preview {
-        border-color: var(--el-color-primary);
-      }
-      
-      .theme-light {
-        background-color: #ffffff;
-        color: #303133;
-      }
-      
-      .theme-dark {
-        background-color: #303133;
-        color: #e6e6e6;
-      }
-      
-      .theme-eye-protection {
-        background-color: #c9e6cd;
-        color: #333333;
-      }
-      
-      .theme-light-yellow {
-        background-color: #fdf6e3;
-        color: #586e75;
-      }
-      
-      .theme-pink {
-        background-color: #fce4ec;
-        color: #880e4f;
+        
+        .el-icon {
+          font-size: 18px;
+        }
+        
+        span {
+          font-size: 12px;
+          font-weight: 500;
+        }
+        
+        &.theme-light {
+          background-color: map-get($light-theme, reading-bg-color);
+          color: map-get($light-theme, reading-text-color);
+        }
+        
+        &.theme-dark {
+          background-color: map-get($dark-theme, reading-bg-color);
+          color: map-get($dark-theme, reading-text-color);
+        }
+        
+        &.theme-eye-protection {
+          background-color: map-get($eye-protection-theme, reading-bg-color);
+          color: map-get($eye-protection-theme, reading-text-color);
+        }
+        
+        &.theme-light-yellow {
+          background-color: map-get($light-yellow-theme, reading-bg-color);
+          color: map-get($light-yellow-theme, reading-text-color);
+        }
+        
+        &.theme-pink {
+          background-color: map-get($pink-theme, reading-bg-color);
+          color: map-get($pink-theme, reading-text-color);
+        }
       }
     }
   }
   
   .font-size-control {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 10px;
+  
+  .font-size-value {
+    min-width: 60px;
+    text-align: center;
+    font-weight: 600;
+    color: var(--el-color-primary);
+    background-color: var(--el-color-primary-light-9);
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 14px;
+  }
+  
+  .el-button {
+    transition: all 0.3s ease;
     
-    .font-size-value {
-      font-size: 16px;
-      font-weight: 500;
+    &:hover:not(.is-disabled) {
+      transform: scale(1.1);
+    }
+    
+    &.is-disabled {
+      opacity: 0.5;
     }
   }
+}
   
   .el-divider {
     margin: 25px 0;
   }
 }
 
-// 主题样式
-:deep(.theme-light) {
-  --el-bg-color: #ffffff;
-  --el-text-color-primary: #303133;
-}
-
-:deep(.theme-dark) {
-  --el-bg-color: #303133;
-  --el-text-color-primary: #e6e6e6;
-  --el-border-color-light: #4c4d4f;
-}
-
-:deep(.theme-eye-protection) {
-  --el-bg-color: #f0f9eb;
-  --el-text-color-primary: #333333;
-}
-
-:deep(.theme-light-yellow) {
-  --el-bg-color: #fdf6e3;
-  --el-text-color-primary: #586e75;
-}
-
-:deep(.theme-pink) {
-  --el-bg-color: #fce4ec;
-  --el-text-color-primary: #880e4f;
-}
+// 主题样式已移至全局SCSS文件
 </style>

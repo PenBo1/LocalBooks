@@ -1,0 +1,85 @@
+// 主题样式
+@import './variables.scss';
+@import './mixins.scss';
+
+// 基础变量
+:root {
+  --app-sidebar-width: 220px;
+  --app-sidebar-collapsed-width: 64px;
+  --app-header-height: 60px;
+  --app-transition-duration: 0.3s;
+}
+
+// 浅色主题 (默认)
+body {
+  @include generate-theme-vars($light-theme);
+}
+
+// 深色主题
+body.theme-dark {
+  @include generate-theme-vars($dark-theme);
+}
+
+// 护眼主题
+body.theme-eye-protection {
+  @include generate-theme-vars($eye-protection-theme);
+}
+
+// 浅黄主题
+body.theme-light-yellow {
+  @include generate-theme-vars($light-yellow-theme);
+}
+
+// 粉色主题
+body.theme-pink {
+  @include generate-theme-vars($pink-theme);
+}
+
+// 主题预览样式
+.theme-preview {
+  width: 120px;
+  height: 80px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  transition: all 0.3s;
+  cursor: pointer;
+  
+  &.theme-light {
+    background-color: map-get($light-theme, bg-color);
+    color: map-get($light-theme, text-color-primary);
+    border: 1px solid map-get($light-theme, border-color);
+  }
+  
+  &.theme-dark {
+    background-color: map-get($dark-theme, bg-color);
+    color: map-get($dark-theme, text-color-primary);
+    border: 1px solid map-get($dark-theme, border-color);
+  }
+  
+  &.theme-eye-protection {
+    background-color: map-get($eye-protection-theme, bg-color);
+    color: map-get($eye-protection-theme, text-color-primary);
+    border: 1px solid map-get($eye-protection-theme, border-color);
+  }
+  
+  &.theme-light-yellow {
+    background-color: map-get($light-yellow-theme, bg-color);
+    color: map-get($light-yellow-theme, text-color-primary);
+    border: 1px solid map-get($light-yellow-theme, border-color);
+  }
+  
+  &.theme-pink {
+    background-color: map-get($pink-theme, bg-color);
+    color: map-get($pink-theme, text-color-primary);
+    border: 1px solid map-get($pink-theme, border-color);
+  }
+}
+
+// 主题选项激活状态
+.theme-option.is-active .theme-preview {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.2);
+}

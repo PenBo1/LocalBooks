@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 获取历史记录列表
 export function getHistory(page: number = 1, page_size: number = 10, sort_by: string = 'read_at') {
   return request({
-    url: '/history',
+    url: '/history/',
     method: 'get',
     params: { page, page_size, sort_by }
   })
@@ -16,7 +16,7 @@ export function addHistory(data: {
   read_position: number
 }) {
   return request({
-    url: '/history',
+    url: '/history/',
     method: 'post',
     data
   })
@@ -25,16 +25,16 @@ export function addHistory(data: {
 // 删除历史记录
 export function deleteHistory(id: number) {
   return request({
-    url: `/history/${id}`,
-    method: 'delete'
+    url: `/history/delete/${id}`,
+    method: 'post'
   })
 }
 
 // 删除小说的所有历史记录
 export function deleteNovelHistory(novel_id: number) {
   return request({
-    url: `/history/novel/${novel_id}`,
-    method: 'delete'
+    url: `/history/delete/novel/${novel_id}`,
+    method: 'post'
   })
 }
 
@@ -42,6 +42,6 @@ export function deleteNovelHistory(novel_id: number) {
 export function clearAllHistory() {
   return request({
     url: '/history/all/clear',
-    method: 'delete'
+    method: 'post'
   })
 }

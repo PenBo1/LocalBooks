@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 
 # 导入路由模块
 from api.novel import router as novel_router
+from api.novel_download import router as novel_download_router
 from api.bookshelf import router as bookshelf_router
 from api.history import router as history_router
 from api.rule import router as rule_router
@@ -30,7 +31,7 @@ logger.add(
 
 # 创建FastAPI应用
 app = FastAPI(
-    title="LocalNovel API",
+    title="LocalBooks API",
     description="本地小说软件API接口",
     version="1.0.0"
 )
@@ -46,6 +47,7 @@ app.add_middleware(
 
 # 注册路由
 app.include_router(novel_router, prefix="/api/novel", tags=["小说"])
+app.include_router(novel_download_router, prefix="/api/novel", tags=["小说"])
 app.include_router(bookshelf_router, prefix="/api/bookshelf", tags=["书架"])
 app.include_router(history_router, prefix="/api/history", tags=["历史"])
 app.include_router(rule_router, prefix="/api/rule", tags=["规则"])
@@ -55,7 +57,7 @@ app.include_router(settings_router, prefix="/api/settings", tags=["设置"])
 @app.on_event("startup")
 async def startup_event():
     """应用启动时执行的操作"""
-    logger.info("LocalNovel API 服务启动中...")
+    logger.info("LocalBooks API 服务启动中...")
     # 初始化数据库
     await init_db()
     logger.info("数据库初始化完成")
@@ -64,13 +66,13 @@ async def startup_event():
 @app.on_event("shutdown")
 async def shutdown_event():
     """应用关闭时执行的操作"""
-    logger.info("LocalNovel API 服务关闭中...")
+    logger.info("LocalBooks API 服务关闭中...")
 
 
 @app.get("/")
 async def root():
     """API根路径"""
-    return {"message": "欢迎使用 LocalNovel API"}
+    return {"message": "欢迎使用 LocalBooks API"}
 
 
 @app.get("/health")

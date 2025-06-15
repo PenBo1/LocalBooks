@@ -4,7 +4,6 @@ import ElementPlus from 'element-plus'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import router from './router'
 import App from './App.vue'
-import './assets/css/main.css'
 import 'element-plus/dist/index.css'
 
 // 创建应用实例

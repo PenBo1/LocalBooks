@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 获取所有设置
 export function getSettings() {
   return request({
-    url: '/settings',
+    url: '/settings/',
     method: 'get'
   })
 }
@@ -19,8 +19,8 @@ export function getSetting(key: string) {
 // 更新设置
 export function updateSetting(key: string, value: any) {
   return request({
-    url: `/settings/${key}`,
-    method: 'put',
+    url: `/settings/update/${key}`,
+    method: 'post',
     data: value
   })
 }
@@ -29,6 +29,6 @@ export function updateSetting(key: string, value: any) {
 export function resetToDefault() {
   return request({
     url: '/settings/default/reset',
-    method: 'get'
+    method: 'post'
   })
 }

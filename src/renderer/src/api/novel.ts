@@ -1,11 +1,11 @@
 import request from '@/utils/request'
 
 // 搜索小说
-export function searchNovels(keyword: string, page: number = 1, page_size: number = 10) {
+export function searchNovels(keyword: string, rule_id: number) {
   return request({
     url: '/novel/search',
     method: 'get',
-    params: { keyword, page, page_size }
+    params: { keyword, rule_id }
   })
 }
 
@@ -63,5 +63,13 @@ export function getChapterContentFromNetwork(novelId: number, chapterId: number)
   return request({
     url: `/novel/${novelId}/chapter/${chapterId}/network`,
     method: 'get'
+  })
+}
+
+// 下载小说所有章节
+export function downloadAllChapters(novelId: number) {
+  return request({
+    url: `/novel/${novelId}/download`,
+    method: 'post'
   })
 }
