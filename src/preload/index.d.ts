@@ -12,6 +12,8 @@ interface WindowControlAPI {
 // 定义API接口
 interface API {
   window: WindowControlAPI
+  openLogFolder: () => void
+  selectDirectory: (options?: { title?: string; buttonLabel?: string }) => Promise<string | null>
 }
 
 declare global {

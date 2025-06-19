@@ -31,6 +31,28 @@ export const useSettingsStore = defineStore('settings', () => {
     { label: '错误', value: 'ERROR' },
     { label: '严重', value: 'CRITICAL' }
   ]
+  
+  // 作者信息
+  const authorInfo = ref({
+    name: 'LocalBooks开发团队',
+    email: 'support@localbooks.com',
+    website: 'https://github.com/localbooks/localbooks',
+    description: 'LocalBooks是一个开源的本地小说阅读应用'
+  })
+  
+  // 版本信息
+  const version = ref('1.0.0')
+  
+  // 快捷键设置
+  const hotkeys = ref({
+    toggleSidebar: 'Ctrl+B',
+    search: 'Ctrl+F',
+    nextChapter: 'ArrowRight',
+    prevChapter: 'ArrowLeft',
+    toggleTheme: 'Ctrl+T',
+    increaseFontSize: 'Ctrl+Plus',
+    decreaseFontSize: 'Ctrl+Minus'
+  })
 
   // 从localStorage加载设置
   const loadFromLocalStorage = () => {
@@ -42,6 +64,9 @@ export const useSettingsStore = defineStore('settings', () => {
       const localCacheEnabled = localStorage.getItem('cache_enabled')
       const localCacheExpiration = localStorage.getItem('cache_expiration')
       const localLogLevel = localStorage.getItem('log_level')
+      const localAuthorInfo = localStorage.getItem('author_info')
+      const localVersion = localStorage.getItem('version')
+      const localHotkeys = localStorage.getItem('hotkeys')
       
       if (localTheme) theme.value = localTheme
       if (localFontSize) fontSize.value = parseInt(localFontSize)
@@ -50,6 +75,9 @@ export const useSettingsStore = defineStore('settings', () => {
       if (localCacheEnabled) cacheEnabled.value = localCacheEnabled === 'true'
       if (localCacheExpiration) cacheExpiration.value = parseInt(localCacheExpiration)
       if (localLogLevel) logLevel.value = localLogLevel
+      if (localAuthorInfo) authorInfo.value = JSON.parse(localAuthorInfo)
+      if (localVersion) version.value = localVersion
+      if (localHotkeys) hotkeys.value = JSON.parse(localHotkeys)
       
       // 应用主题
       applyTheme(theme.value)
@@ -63,45 +91,54 @@ export const useSettingsStore = defineStore('settings', () => {
   
   // 加载设置
   const loadSettings = async () => {
-    // 先尝试从localStorage加载
-    const loadedFromLocal = loadFromLocalStorage()
+    // 从localStorage加载
+    loadFromLocalStorage()
     
-    // 如果本地没有设置或加载失败，则从服务器加载
-    if (!loadedFromLocal) {
-      try {
-        const settings = await getSettings()
-        if (settings) {
-          theme.value = settings.theme || 'light'
-          fontSize.value = parseInt(settings.font_size) || 16
-          fontFamily.value = settings.font_family || 'Microsoft YaHei, sans-serif'
-          lineHeight.value = parseFloat(settings.line_height) || 1.5
-          cacheEnabled.value = settings.cache_enabled === 'true'
-          cacheExpiration.value = parseInt(settings.cache_expiration) || 86400
-          logLevel.value = settings.log_level || 'INFO'
-          
-          // 保存到localStorage
-          localStorage.setItem('theme', theme.value)
-          localStorage.setItem('font_size', fontSize.value.toString())
-          localStorage.setItem('font_family', fontFamily.value)
-          localStorage.setItem('line_height', lineHeight.value.toString())
-          localStorage.setItem('cache_enabled', cacheEnabled.value.toString())
-          localStorage.setItem('cache_expiration', cacheExpiration.value.toString())
-          localStorage.setItem('log_level', logLevel.value)
-          
-          // 应用主题
-          applyTheme(theme.value)
-        }
-      } catch (error) {
-        console.error('从服务器加载设置失败:', error)
-      }
+    // 如果本地没有设置，使用默认值
+    if (!localStorage.getItem('theme')) {
+      // 设置默认值
+      theme.value = 'light'
+      fontSize.value = 16
+      fontFamily.value = 'Microsoft YaHei, sans-serif'
+      lineHeight.value = 1.5
+      cacheEnabled.value = true
+      cacheExpiration.value = 86400
+      logLevel.value = 'INFO'
+      
+      // 保存到localStorage
+      localStorage.setItem('theme', theme.value)
+      localStorage.setItem('font_size', fontSize.value.toString())
+      localStorage.setItem('font_family', fontFamily.value)
+      localStorage.setItem('line_height', lineHeight.value.toString())
+      localStorage.setItem('cache_enabled', cacheEnabled.value.toString())
+      localStorage.setItem('cache_expiration', cacheExpiration.value.toString())
+      localStorage.setItem('log_level', logLevel.value)
     }
+    
+    // 如果本地没有作者信息，保存默认值
+    if (!localStorage.getItem('author_info')) {
+      localStorage.setItem('author_info', JSON.stringify(authorInfo.value))
+    }
+    
+    // 如果本地没有版本信息，保存默认值
+    if (!localStorage.getItem('version')) {
+      localStorage.setItem('version', version.value)
+    }
+    
+    // 如果本地没有快捷键设置，保存默认值
+    if (!localStorage.getItem('hotkeys')) {
+      localStorage.setItem('hotkeys', JSON.stringify(hotkeys.value))
+    }
+    
+    // 应用主题
+    applyTheme(theme.value)
   }
 
   // 更新主题
   const setTheme = async (newTheme: string) => {
     theme.value = newTheme
     localStorage.setItem('theme', newTheme)
-    await updateSetting('theme', newTheme)
+    // 移除对后端API的调用
     applyTheme(newTheme)
   }
 
@@ -166,42 +203,81 @@ export const useSettingsStore = defineStore('settings', () => {
   const setFontSize = async (size: number) => {
     fontSize.value = size
     localStorage.setItem('font_size', size.toString())
-    await updateSetting('font_size', size.toString())
+    // 移除对后端API的调用
   }
 
   // 更新字体
   const setFontFamily = async (font: string) => {
     fontFamily.value = font
     localStorage.setItem('font_family', font)
-    await updateSetting('font_family', font)
+    // 移除对后端API的调用
   }
 
   // 更新行距
   const setLineHeight = async (height: number) => {
     lineHeight.value = height
     localStorage.setItem('line_height', height.toString())
-    await updateSetting('line_height', height.toString())
+    // 移除对后端API的调用
   }
 
   // 更新缓存启用状态
   const setCacheEnabled = async (enabled: boolean) => {
     cacheEnabled.value = enabled
     localStorage.setItem('cache_enabled', enabled.toString())
-    await updateSetting('cache_enabled', enabled.toString())
+    // 移除对后端API的调用
   }
 
   // 更新缓存过期时间
   const setCacheExpiration = async (time: number) => {
     cacheExpiration.value = time
     localStorage.setItem('cache_expiration', time.toString())
-    await updateSetting('cache_expiration', time.toString())
+    // 移除对后端API的调用
   }
 
   // 更新日志级别
   const setLogLevel = async (level: string) => {
     logLevel.value = level
     localStorage.setItem('log_level', level)
-    await updateSetting('log_level', level)
+    // 移除对后端API的调用
+  }
+  
+  // 更新作者信息
+  const setAuthorInfo = (info: any) => {
+    authorInfo.value = info
+    localStorage.setItem('author_info', JSON.stringify(info))
+  }
+  
+  // 获取作者信息
+  const getAuthorInfo = () => {
+    return authorInfo.value
+  }
+  
+  // 更新版本号
+  const setVersion = (ver: string) => {
+    version.value = ver
+    localStorage.setItem('version', ver)
+  }
+  
+  // 获取版本号
+  const getVersion = () => {
+    return version.value
+  }
+  
+  // 更新快捷键设置
+  const setHotkeys = (keys: any) => {
+    hotkeys.value = keys
+    localStorage.setItem('hotkeys', JSON.stringify(keys))
+  }
+  
+  // 更新单个快捷键
+  const setHotkey = (key: string, value: string) => {
+    hotkeys.value[key] = value
+    localStorage.setItem('hotkeys', JSON.stringify(hotkeys.value))
+  }
+  
+  // 获取快捷键设置
+  const getHotkeys = () => {
+    return hotkeys.value
   }
 
   return {
@@ -214,6 +290,9 @@ export const useSettingsStore = defineStore('settings', () => {
     cacheExpiration,
     logLevel,
     logLevelOptions,
+    authorInfo,
+    version,
+    hotkeys,
     loadSettings,
     setTheme,
     applyTheme,
@@ -222,6 +301,13 @@ export const useSettingsStore = defineStore('settings', () => {
     setLineHeight,
     setCacheEnabled,
     setCacheExpiration,
-    setLogLevel
+    setLogLevel,
+    setAuthorInfo,
+    getAuthorInfo,
+    setVersion,
+    getVersion,
+    setHotkeys,
+    setHotkey,
+    getHotkeys
   }
 })

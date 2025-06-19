@@ -9,14 +9,7 @@ export function searchNovels(keyword: string, rule_id: number) {
   })
 }
 
-// 获取热门小说
-export function getHotNovels(limit: number = 10) {
-  return request({
-    url: '/novel/hot',
-    method: 'get',
-    params: { limit }
-  })
-}
+// 热门小说API调用已删除
 
 // 获取小说详情
 export function getNovelDetail(id: number) {

@@ -13,3 +13,4 @@ asyncio==3.4.3
 typing-extensions==4.10.0
 starlette==0.36.3
 python-multipart==0.0.9
+# 移除 aioredis 依赖，使用 redis 替代

@@ -26,21 +26,18 @@ async def search_novel(
         # 使用爬虫搜索小说
         results = await spider_manager.search_novel(keyword, rule_id)
 
+        # 记录搜索历史
+        from database.models import SearchHistoryCreate
+        search_history = SearchHistoryCreate(keyword=keyword)
+        await crud.add_search_history(search_history)
+
         return results
     except Exception as e:
         logger.error(f"搜索小说失败: {str(e)}")
         raise HTTPException(status_code=500, detail=f"搜索小说失败: {str(e)}")
 
 
-@router.get("/hot", response_model=List[Novel])
-async def get_hot_novels(limit: int = Query(10, description="返回数量")):
-    """获取热门小说"""
-    try:
-        novels = await crud.get_hot_novels(limit)
-        return novels
-    except Exception as e:
-        logger.error(f"获取热门小说失败: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"获取热门小说失败: {str(e)}")
+# 热门小说API接口已删除
 
 
 @router.post("/add", response_model=int)

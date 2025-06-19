@@ -29,7 +29,7 @@ const routes: Array<RouteRecordRaw> = [
         path: '/rule',
         name: 'Rule',
         component: () => import('@/views/rule/index.vue'),
-        meta: { title: '管理', icon: 'Setting' }
+        meta: { title: '管理', icon: 'List' }
       },
       {
         path: '/about',

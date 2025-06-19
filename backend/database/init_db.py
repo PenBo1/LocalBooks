@@ -62,6 +62,13 @@ CREATE_TABLES = [
     )
     """,
     """
+    CREATE TABLE IF NOT EXISTS search_history (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        keyword TEXT NOT NULL,
+        search_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+    """,
+    """
     CREATE TABLE IF NOT EXISTS rules (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
@@ -97,6 +104,9 @@ CREATE_TABLES = [
     """,
     """
     CREATE INDEX IF NOT EXISTS idx_history_novel_id ON history(novel_id)
+    """,
+    """
+    CREATE INDEX IF NOT EXISTS idx_search_history_keyword ON search_history(keyword)
     """,
     """
     CREATE INDEX IF NOT EXISTS idx_rules_name ON rules(name)

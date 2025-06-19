@@ -354,6 +354,46 @@ async def add_history(history: HistoryCreate) -> int:
         await conn.close()
 
 
+# 搜索历史相关操作
+async def add_search_history(search_history: SearchHistoryCreate) -> int:
+    """添加搜索历史"""
+    conn = await get_db_connection()
+    try:
+        # 检查是否已存在相同关键词的搜索历史
+        cursor = await conn.execute(
+            "SELECT id FROM search_history WHERE keyword = ?",
+            (search_history.keyword,)
+        )
+        existing = await cursor.fetchone()
+
+        if existing:
+            # 更新已有记录的时间戳
+            await conn.execute(
+                """
+                UPDATE search_history
+                SET search_at = ?
+                WHERE id = ?
+                """,
+                (datetime.now(), existing['id'])
+            )
+            await conn.commit()
+            return existing['id']
+        else:
+            # 创建新记录
+            cursor = await conn.execute(
+                """
+                INSERT INTO search_history
+                (keyword)
+                VALUES (?)
+                """,
+                (search_history.keyword,)
+            )
+            await conn.commit()
+            return cursor.lastrowid
+    finally:
+        await conn.close()
+
+
 async def get_history(page: int = 1, page_size: int = 10, sort_by: str = "read_at") -> Tuple[List[Dict], int]:
     """获取历史记录列表"""
     conn = await get_db_connection()
@@ -464,6 +504,63 @@ async def clear_all_history() -> bool:
     conn = await get_db_connection()
     try:
         await conn.execute("DELETE FROM history")
+        await conn.commit()
+        return True
+    finally:
+        await conn.close()
+
+
+async def get_search_history(limit: int = 10) -> List[Dict]:
+    """获取搜索历史列表"""
+    conn = await get_db_connection()
+    try:
+        cursor = await conn.execute(
+            """
+            SELECT * FROM search_history
+            ORDER BY search_at DESC
+            LIMIT ?
+            """,
+            (limit,)
+        )
+        rows = await cursor.fetchall()
+        return [dict(row) for row in rows]
+    finally:
+        await conn.close()
+
+
+async def delete_search_history(history_id: int) -> bool:
+    """删除搜索历史"""
+    conn = await get_db_connection()
+    try:
+        await conn.execute(
+            "DELETE FROM search_history WHERE id = ?",
+            (history_id,)
+        )
+        await conn.commit()
+        return True
+    finally:
+        await conn.close()
+
+
+async def delete_search_history_by_keyword(keyword: str) -> bool:
+    """根据关键词删除搜索历史"""
+    conn = await get_db_connection()
+    try:
+        await conn.execute(
+            "DELETE FROM search_history WHERE keyword = ?",
+            (keyword,)
+        )
+        await conn.commit()
+        return True
+    finally:
+        await conn.close()
+
+
+async def clear_all_search_history() -> bool:
+    """清空所有搜索历史"""
+    conn = await get_db_connection()
+    try:
+        await conn.execute("DELETE FROM search_history")
         await conn.commit()
         return True
     finally:

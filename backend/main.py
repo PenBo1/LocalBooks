@@ -11,7 +11,9 @@ from api.novel_download import router as novel_download_router
 from api.bookshelf import router as bookshelf_router
 from api.history import router as history_router
 from api.rule import router as rule_router
-from api.settings import router as settings_router
+from api.cache import router as cache_router
+from api.search_history import router as search_history_router
+# 移除settings_router导入，改为使用localStorage
 
 # 导入数据库初始化
 from database.init_db import init_db
@@ -51,7 +53,9 @@ app.include_router(novel_download_router, prefix="/api/novel", tags=["小说"])
 app.include_router(bookshelf_router, prefix="/api/bookshelf", tags=["书架"])
 app.include_router(history_router, prefix="/api/history", tags=["历史"])
 app.include_router(rule_router, prefix="/api/rule", tags=["规则"])
-app.include_router(settings_router, prefix="/api/settings", tags=["设置"])
+app.include_router(cache_router, prefix="/api/cache", tags=["缓存管理"])
+app.include_router(search_history_router, prefix="/api/search_history", tags=["搜索历史"])
+# 移除settings_router注册，改为使用localStorage
 
 
 @app.on_event("startup")
@@ -69,10 +73,21 @@ async def shutdown_event():
     logger.info("LocalBooks API 服务关闭中...")
 
 
-@app.get("/")
+@app.get("/", response_model=dict)
 async def root():
     """API根路径"""
-    return {"message": "欢迎使用 LocalBooks API"}
+    return {
+        "message": "欢迎访问 LocalBooks API",
+        "author": {
+            "name": "PenBo",
+            "github": "https://github.com/PenBo1"
+        },
+        "resources": {
+            "documentation": "/docs",
+            "repository": "https://github.com/PenBo1/LocalBooks"
+        },
+        "version": "1.0.0"
+    }
 
 
 @app.get("/health")

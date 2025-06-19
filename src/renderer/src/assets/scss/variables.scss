@@ -1,158 +1,158 @@
 // 主题变量
 
-// 浅色主题
+// 浅色主题 - 清新蓝白
 $light-theme: (
   // 背景颜色
-  bg-color: #ffffff,
-  bg-color-secondary: #f5f7fa,
+  bg-color: #fafbff,
+  bg-color-secondary: #f0f4ff,
   
   // 文本颜色
-  text-color-primary: #303133,
-  text-color-secondary: #606266,
-  text-color-placeholder: #c0c4cc,
+  text-color-primary: #2d3748,
+  text-color-secondary: #4a5568,
+  text-color-placeholder: #a0aec0,
   
   // 边框颜色
-  border-color: #dcdfe6,
-  border-color-light: #e4e7ed,
+  border-color: #e2e8f0,
+  border-color-light: #edf2f7,
   
   // 填充颜色
-  fill-color: #f0f2f5,
-  fill-color-light: #f5f7fa,
+  fill-color: #f7fafc,
+  fill-color-light: #edf2f7,
   
   // 主题色
-  primary-color: #409eff,
-  success-color: #67c23a,
-  warning-color: #e6a23c,
-  danger-color: #f56c6c,
-  info-color: #909399,
+  primary-color: #667eea,
+  success-color: #48bb78,
+  warning-color: #ed8936,
+  danger-color: #f56565,
+  info-color: #4299e1,
   
   // 阅读背景和文本
-  reading-bg-color: #ffffff,
-  reading-text-color: #303133
+  reading-bg-color: #fafbff,
+  reading-text-color: #2d3748
 );
 
-// 深色主题
+// 深色主题 - 温暖深蓝
 $dark-theme: (
   // 背景颜色
-  bg-color: #303133,
-  bg-color-secondary: #2c2c2c,
+  bg-color: #1a202c,
+  bg-color-secondary: #2d3748,
   
   // 文本颜色
-  text-color-primary: #e6e6e6,
-  text-color-secondary: #a6a6a6,
-  text-color-placeholder: #6c6c6c,
+  text-color-primary: #f7fafc,
+  text-color-secondary: #e2e8f0,
+  text-color-placeholder: #a0aec0,
   
   // 边框颜色
-  border-color: #4c4d4f,
-  border-color-light: #5e5e5e,
+  border-color: #4a5568,
+  border-color-light: #718096,
   
   // 填充颜色
-  fill-color: #3e3e3e,
-  fill-color-light: #484848,
+  fill-color: #2d3748,
+  fill-color-light: #4a5568,
   
   // 主题色
-  primary-color: #409eff,
-  success-color: #67c23a,
-  warning-color: #e6a23c,
-  danger-color: #f56c6c,
-  info-color: #909399,
+  primary-color: #63b3ed,
+  success-color: #68d391,
+  warning-color: #fbb040,
+  danger-color: #fc8181,
+  info-color: #90cdf4,
   
   // 阅读背景和文本
-  reading-bg-color: #303133,
-  reading-text-color: #e6e6e6
+  reading-bg-color: #1a202c,
+  reading-text-color: #f7fafc
 );
 
-// 护眼主题
+// 护眼主题 - 清新薄荷绿
 $eye-protection-theme: (
   // 背景颜色
-  bg-color: #c7edcc,
-  bg-color-secondary: #d8f5dc,
+  bg-color: #f0fdf4,
+  bg-color-secondary: #dcfce7,
   
   // 文本颜色
-  text-color-primary: #333333,
-  text-color-secondary: #555555,
-  text-color-placeholder: #888888,
+  text-color-primary: #1f2937,
+  text-color-secondary: #374151,
+  text-color-placeholder: #9ca3af,
   
   // 边框颜色
-  border-color: #a8d8ae,
-  border-color-light: #b9e3be,
+  border-color: #bbf7d0,
+  border-color-light: #d1fae5,
   
   // 填充颜色
-  fill-color: #d8f5dc,
-  fill-color-light: #e5f9e8,
+  fill-color: #ecfdf5,
+  fill-color-light: #f0fdf4,
   
   // 主题色
-  primary-color: #42b983,
-  success-color: #67c23a,
-  warning-color: #e6a23c,
-  danger-color: #f56c6c,
-  info-color: #909399,
+  primary-color: #10b981,
+  success-color: #059669,
+  warning-color: #f59e0b,
+  danger-color: #ef4444,
+  info-color: #06b6d4,
   
   // 阅读背景和文本
-  reading-bg-color: #c7edcc,
-  reading-text-color: #333333
+  reading-bg-color: #f0fdf4,
+  reading-text-color: #1f2937
 );
 
-// 浅黄主题
+// 浅黄主题 - 温暖奶茶色
 $light-yellow-theme: (
   // 背景颜色
-  bg-color: #fdf6e3,
-  bg-color-secondary: #f5eed8,
+  bg-color: #fffbeb,
+  bg-color-secondary: #fef3c7,
   
   // 文本颜色
-  text-color-primary: #586e75,
-  text-color-secondary: #657b83,
-  text-color-placeholder: #93a1a1,
+  text-color-primary: #92400e,
+  text-color-secondary: #b45309,
+  text-color-placeholder: #d97706,
   
   // 边框颜色
-  border-color: #eee8d5,
-  border-color-light: #f2ead9,
+  border-color: #fed7aa,
+  border-color-light: #fde68a,
   
   // 填充颜色
-  fill-color: #eee8d5,
-  fill-color-light: #f5f0e0,
+  fill-color: #fef3c7,
+  fill-color-light: #fffbeb,
   
   // 主题色
-  primary-color: #b58900,
-  success-color: #859900,
-  warning-color: #cb4b16,
-  danger-color: #dc322f,
-  info-color: #268bd2,
+  primary-color: #f59e0b,
+  success-color: #10b981,
+  warning-color: #f97316,
+  danger-color: #ef4444,
+  info-color: #3b82f6,
   
   // 阅读背景和文本
-  reading-bg-color: #fdf6e3,
-  reading-text-color: #586e75
+  reading-bg-color: #fffbeb,
+  reading-text-color: #92400e
 );
 
-// 粉色主题
+// 粉色主题 - 甜美樱花粉
 $pink-theme: (
   // 背景颜色
-  bg-color: #fff0f5,
-  bg-color-secondary: #ffe4ee,
+  bg-color: #fdf2f8,
+  bg-color-secondary: #fce7f3,
   
   // 文本颜色
-  text-color-primary: #880e4f,
-  text-color-secondary: #ad1457,
-  text-color-placeholder: #d81b60,
+  text-color-primary: #831843,
+  text-color-secondary: #be185d,
+  text-color-placeholder: #ec4899,
   
   // 边框颜色
-  border-color: #f8bbd0,
-  border-color-light: #fce4ec,
+  border-color: #f9a8d4,
+  border-color-light: #fbcfe8,
   
   // 填充颜色
-  fill-color: #f8bbd0,
-  fill-color-light: #fce4ec,
+  fill-color: #fce7f3,
+  fill-color-light: #fdf2f8,
   
   // 主题色
-  primary-color: #ec407a,
-  success-color: #66bb6a,
-  warning-color: #ffca28,
-  danger-color: #ef5350,
-  info-color: #42a5f5,
+  primary-color: #ec4899,
+  success-color: #10b981,
+  warning-color: #f59e0b,
+  danger-color: #ef4444,
+  info-color: #8b5cf6,
   
   // 阅读背景和文本
-  reading-bg-color: #fff0f5,
-  reading-text-color: #880e4f
+  reading-bg-color: #fdf2f8,
+  reading-text-color: #831843
 );
 
 // 字体设置

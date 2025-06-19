@@ -151,6 +151,25 @@ class Setting(SettingBase):
         from_attributes = True
 
 
+class SearchHistoryBase(BaseModel):
+    """搜索历史基本信息模型"""
+    keyword: str
+
+
+class SearchHistoryCreate(SearchHistoryBase):
+    """创建搜索历史的请求模型"""
+    pass
+
+
+class SearchHistory(SearchHistoryBase):
+    """搜索历史完整信息模型"""
+    id: int
+    search_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
 class SearchResult(BaseModel):
     """搜索结果模型"""
     title: str

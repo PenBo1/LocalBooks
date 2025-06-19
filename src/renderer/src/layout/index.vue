@@ -6,7 +6,7 @@
     <!-- 主内容区域的布局容器 -->
     <div class="content-container">
       <!-- 左侧导航栏 -->
-      <div class="sidebar">
+      <div class="sidebar" :class="{ 'collapsed': isCollapse }">
         <div class="logo">
           <h1>LocalBooks</h1>
         </div>
@@ -16,7 +16,11 @@
           :router="true"
           :collapse="isCollapse"
         >
-          <el-menu-item v-for="route in routes" :key="route.path" :index="route.path">
+          <el-menu-item 
+            v-for="route in routes" 
+            :key="route.path" 
+            :index="route.path"
+          >
             <el-icon>
               <component :is="route.meta?.icon" />
             </el-icon>
@@ -71,11 +75,9 @@
         <!-- 内容区域 -->
         <div class="app-main">
           <router-view v-slot="{ Component }">
-            <transition name="fade" mode="out-in">
-              <keep-alive :include="cachedViews">
-                <component :is="Component" />
-              </keep-alive>
-            </transition>
+            <keep-alive :include="cachedViews">
+              <component :is="Component" :key="$route.fullPath" />
+            </keep-alive>
           </router-view>
         </div>
       </div>
@@ -84,7 +86,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, shallowRef } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ArrowDown } from '@element-plus/icons-vue'
 import { useSettingsStore } from '@/store/settings'
@@ -94,11 +96,11 @@ const route = useRoute()
 const router = useRouter()
 const settingsStore = useSettingsStore()
 
-// 侧边栏折叠状态
-const isCollapse = ref(false)
+// 侧边栏折叠状态 - 从localStorage读取
+const isCollapse = ref(localStorage.getItem('sidebarCollapsed') === 'true')
 
-// 缓存的视图
-const cachedViews = ref(['Home', 'Bookshelf', 'History', 'Rule', 'About', 'Settings'])
+// 缓存的视图 - 使用shallowRef减少深层响应式监听
+const cachedViews = shallowRef(['Home', 'Bookshelf', 'History', 'Rule', 'About', 'Settings'])
 
 // 获取路由
 const routes = computed(() => {
@@ -106,24 +108,28 @@ const routes = computed(() => {
   return mainRoutes.filter(route => route.meta && route.meta.title)
 })
 
-// 当前激活的菜单
-const activeMenu = computed(() => {
-  return route.path
-})
+// 当前激活的菜单 - 使用计算属性的简化形式
+const activeMenu = computed(() => route.path)
 
-// 当前路由
-const currentRoute = computed(() => {
-  return route
-})
+// 当前路由 - 使用计算属性的简化形式
+const currentRoute = computed(() => route)
 
 // 主题选项
 const themeOptions = computed(() => {
   return settingsStore.themeOptions
 })
 
-// 切换侧边栏折叠状态
+// 切换侧边栏折叠状态 - 添加防抖
+let collapseTimeout: number | null = null
 const toggleCollapse = () => {
-  isCollapse.value = !isCollapse.value
+  if (collapseTimeout) return
+  
+  collapseTimeout = setTimeout(() => {
+    isCollapse.value = !isCollapse.value
+    // 保存到localStorage
+    localStorage.setItem('sidebarCollapsed', isCollapse.value.toString())
+    collapseTimeout = null
+  }, 50) as unknown as number
 }
 
 // 切换主题
@@ -149,7 +155,8 @@ onMounted(() => {
 /* 主内容区域的布局容器 */
 .content-container {
   display: flex;
-  flex: 1;
+  height: calc(100vh - 30px);
+  width: 100%;
   overflow: hidden;
 }
 
@@ -159,9 +166,10 @@ onMounted(() => {
   width: v-bind('isCollapse ? "64px" : "200px"');
   height: 100%;
   background-color: var(--el-menu-bg-color);
-  transition: width 0.3s;
+  transition: width 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
   box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
   z-index: 10;
+  will-change: width;
 
   .logo {
     height: 60px;
@@ -184,6 +192,8 @@ onMounted(() => {
   .sidebar-menu {
     flex: 1;
     border-right: none;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 
   .sidebar-footer {
@@ -200,6 +210,8 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  transition: margin-left 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+  will-change: margin-left;
 }
 
 .navbar {
@@ -227,6 +239,18 @@ onMounted(() => {
   padding: 20px;
   overflow-y: auto;
   background-color: var(--el-bg-color-page);
+  position: relative;
+}
+
+/* 优化菜单项样式 */
+.el-menu-item {
+  transition: background-color 0.2s, color 0.2s;
+}
+
+/* 优化图标样式 */
+.el-menu-item .el-icon {
+  margin-right: 5px;
+  will-change: transform;
 }
 
 .fade-enter-active,

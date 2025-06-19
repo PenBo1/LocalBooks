@@ -94,9 +94,25 @@ app.whenReady().then(() => {
   })
   
   // 打开日志文件夹
-  ipcMain.on('open-log-folder', () => {
+  ipcMain.on('open:logFolder', () => {
     const logPath = join(app.getPath('userData'), 'logs')
     shell.openPath(logPath)
+  })
+  
+  // 处理选择目录的请求
+  ipcMain.handle('dialog:selectDirectory', async (_, options) => {
+    const { dialog } = require('electron')
+    const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {
+      properties: ['openDirectory', 'createDirectory'],
+      title: options?.title || '选择目录',
+      buttonLabel: options?.buttonLabel || '选择',
+      ...options
+    })
+    if (canceled) {
+      return null
+    } else {
+      return filePaths[0]
+    }
   })
 
   createWindow()

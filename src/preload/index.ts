@@ -10,7 +10,12 @@ const api = {
     close: () => ipcRenderer.send('window-close'),
     isMaximized: () => ipcRenderer.invoke('window-is-maximized'),
     startDrag: () => ipcRenderer.send('window-drag')
-  }
+  },
+  // 打开日志文件夹
+  openLogFolder: () => ipcRenderer.send('open:logFolder'),
+  
+  // 选择目录
+  selectDirectory: (options) => ipcRenderer.invoke('dialog:selectDirectory', options)
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to
