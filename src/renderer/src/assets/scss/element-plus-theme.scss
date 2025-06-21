@@ -94,8 +94,9 @@
   // 覆盖组件特定变量
   --el-menu-bg-color: #{map-get($theme-map, bg-color)};
   --el-menu-text-color: #{map-get($theme-map, text-color-primary)};
-  --el-menu-hover-bg-color: #{lighten(map-get($theme-map, primary-color), 40%)};
+  --el-menu-hover-bg-color: #{transparentize(map-get($theme-map, primary-color), 0.85)};
   --el-menu-active-color: #{map-get($theme-map, primary-color)};
+  --el-menu-hover-text-color: #{map-get($theme-map, primary-color)};
   
   --el-button-disabled-bg-color: #{map-get($theme-map, fill-color-light)};
   --el-button-disabled-text-color: #{lighten(map-get($theme-map, text-color-secondary), 20%)};

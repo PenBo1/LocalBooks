@@ -1,0 +1,85 @@
+2025-06-21 10:31:07 | ERROR    | MainThread      | logger.py:181 | 搜索小说失败: 444
+Traceback (most recent call last):
+  File "E:\LocalBooks-main\backend\api\novel.py", line 29, in search_novel
+    results = await spider_manager.search_novel(keyword, rule_id)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\LocalBooks-main\backend\spider\spider_manager.py", line 81, in search_novel
+    await _to_future(d)
+  File "E:\LocalBooks-main\backend\.venv\Lib\site-packages\twisted\internet\defer.py", line 1857, in _inlineCallbacks
+    result = context.run(gen.send, result)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\LocalBooks-main\backend\.venv\Lib\site-packages\scrapy\crawler.py", line 159, in crawl
+    start_requests = iter(self.spider.start_requests())
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: 'async_generator' object is not iterable
+2025-06-21 12:11:08 | ERROR    | MainThread      | logger.py:181 | 搜索小说失败: 55
+Traceback (most recent call last):
+  File "E:\LocalBooks-main\backend\api\novel.py", line 29, in search_novel
+    results = await spider_manager.search_novel(keyword, rule_id)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\LocalBooks-main\backend\spider\spider_manager.py", line 81, in search_novel
+    await _to_future(d)
+  File "E:\LocalBooks-main\backend\.venv\Lib\site-packages\twisted\internet\defer.py", line 1857, in _inlineCallbacks
+    result = context.run(gen.send, result)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\LocalBooks-main\backend\.venv\Lib\site-packages\scrapy\crawler.py", line 159, in crawl
+    start_requests = iter(self.spider.start_requests())
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: 'async_generator' object is not iterable
+2025-06-21 12:13:04 | ERROR    | MainThread      | logger.py:181 | 搜索小说失败: 55
+Traceback (most recent call last):
+  File "E:\LocalBooks-main\backend\api\novel.py", line 29, in search_novel
+    results = await spider_manager.search_novel(keyword, rule_id)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\LocalBooks-main\backend\spider\spider_manager.py", line 81, in search_novel
+    await _to_future(d)
+  File "E:\LocalBooks-main\backend\.venv\Lib\site-packages\twisted\internet\defer.py", line 1857, in _inlineCallbacks
+    result = context.run(gen.send, result)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\LocalBooks-main\backend\.venv\Lib\site-packages\scrapy\crawler.py", line 159, in crawl
+    start_requests = iter(self.spider.start_requests())
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: 'async_generator' object is not iterable
+2025-06-21 13:07:33 | ERROR    | MainThread      | logger.py:181 | 搜索小说失败: gzr
+Traceback (most recent call last):
+  File "E:\LocalBooks-main\backend\api\novel.py", line 26, in search_novel
+    raise HTTPException(status_code=404, detail=f"规则不存在: {rule_id}")
+fastapi.exceptions.HTTPException: 404: 规则不存在: 1
+2025-06-21 13:07:37 | ERROR    | MainThread      | logger.py:181 | 搜索小说失败: gzr
+Traceback (most recent call last):
+  File "E:\LocalBooks-main\backend\api\novel.py", line 26, in search_novel
+    raise HTTPException(status_code=404, detail=f"规则不存在: {rule_id}")
+fastapi.exceptions.HTTPException: 404: 规则不存在: 1
+2025-06-21 13:07:40 | ERROR    | MainThread      | logger.py:181 | 搜索小说失败: gzr
+Traceback (most recent call last):
+  File "E:\LocalBooks-main\backend\api\novel.py", line 26, in search_novel
+    raise HTTPException(status_code=404, detail=f"规则不存在: {rule_id}")
+fastapi.exceptions.HTTPException: 404: 规则不存在: 1
+2025-06-21 14:08:56 | ERROR    | MainThread      | logger.py:181 | 搜索小说失败: 蛊真人
+Traceback (most recent call last):
+  File "E:\LocalBooks-main\backend\api\novel.py", line 29, in search_novel
+    results = await spider_manager.search_novel(keyword, rule_id)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\LocalBooks-main\backend\spider\spider_manager.py", line 81, in search_novel
+    await _to_future(d)
+  File "E:\LocalBooks-main\backend\.venv\Lib\site-packages\twisted\internet\defer.py", line 1857, in _inlineCallbacks
+    result = context.run(gen.send, result)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\LocalBooks-main\backend\.venv\Lib\site-packages\scrapy\crawler.py", line 159, in crawl
+    start_requests = iter(self.spider.start_requests())
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: 'async_generator' object is not iterable
+2025-06-21 14:09:08 | ERROR    | MainThread      | logger.py:181 | 搜索小说失败: 蛊真人
+Traceback (most recent call last):
+  File "E:\LocalBooks-main\backend\api\novel.py", line 29, in search_novel
+    results = await spider_manager.search_novel(keyword, rule_id)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\LocalBooks-main\backend\spider\spider_manager.py", line 81, in search_novel
+    await _to_future(d)
+  File "E:\LocalBooks-main\backend\.venv\Lib\site-packages\twisted\internet\defer.py", line 1857, in _inlineCallbacks
+    result = context.run(gen.send, result)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\LocalBooks-main\backend\.venv\Lib\site-packages\scrapy\crawler.py", line 159, in crawl
+    start_requests = iter(self.spider.start_requests())
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: 'async_generator' object is not iterable

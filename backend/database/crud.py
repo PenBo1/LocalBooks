@@ -10,7 +10,8 @@ from database.models import (
     Bookshelf, BookshelfCreate,
     History, HistoryCreate,
     Rule, RuleCreate,
-    Setting, SettingCreate
+    Setting, SettingCreate,
+    SearchHistory, SearchHistoryCreate
 )
 
 
@@ -575,11 +576,11 @@ async def create_rule(rule: RuleCreate) -> int:
         cursor = await conn.execute(
             """
             INSERT INTO rules
-            (name, source_url, search_url, cover_rule, title_rule, author_rule,
+            (name, source_url, search_url, search_result_rule, cover_rule, title_rule, author_rule,
              description_rule, chapter_list_rule, chapter_content_rule)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
-            (rule.name, rule.source_url, rule.search_url, rule.cover_rule,
+            (rule.name, rule.source_url, rule.search_url, rule.search_result_rule, rule.cover_rule,
              rule.title_rule, rule.author_rule, rule.description_rule,
              rule.chapter_list_rule, rule.chapter_content_rule)
         )

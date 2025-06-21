@@ -16,6 +16,29 @@
           </el-button>
         </template>
       </el-input>
+      
+      <!-- 搜索历史标签 -->
+      <div v-if="searchHistories && searchHistories.length > 0" class="search-history-tags">
+        <span class="history-label">搜索历史：</span>
+        <el-tag 
+          v-for="history in searchHistories" 
+          :key="history.id"
+          class="history-tag"
+          size="small"
+          closable
+          @click="useSearchHistory(history.keyword)"
+          @close="deleteSearchHistory(history.id)"
+        >
+          {{ history.keyword }}
+        </el-tag>
+        <el-button 
+          type="text" 
+          size="small" 
+          @click="clearAllSearchHistory"
+        >
+          清空历史
+        </el-button>
+      </div>
     </div>
 
     <!-- 搜索结果 -->
@@ -25,7 +48,7 @@
         <el-button text @click="clearSearchResults">清空</el-button>
       </div>
 
-      <el-empty v-if="searchResults.length === 0" description="暂无搜索结果" />
+      <el-empty v-if="!searchResults || searchResults.length === 0" description="暂无搜索结果" />
 
       <div v-else class="novel-grid">
         <novel-card
@@ -37,7 +60,7 @@
       </div>
 
       <el-pagination
-        v-if="searchResults.length > 0"
+        v-if="searchResults && searchResults.length > 0"
         v-model:current-page="searchPage"
         v-model:page-size="searchPageSize"
         :page-sizes="[10, 20, 30, 40]"
@@ -48,11 +71,11 @@
       />
     </div>
 
-    <!-- 热门推荐 -->
-    <div class="hot-novels">
+    <!-- 搜索历史标签展示 -->
+    <div class="search-history-section">
       <div class="section-header">
-        <h2>热门推荐</h2>
-        <el-button text @click="refreshHotNovels">
+        <h2>搜索历史</h2>
+        <el-button text @click="fetchSearchHistory">
           <el-icon><Refresh /></el-icon>
           刷新
         </el-button>
@@ -60,15 +83,20 @@
 
       <el-skeleton v-if="loading" :rows="3" animated />
 
-      <el-empty v-else-if="hotNovels.length === 0" description="暂无热门小说" />
+      <el-empty v-else-if="!searchHistories || searchHistories.length === 0" description="暂无搜索历史" />
 
-      <div v-else class="novel-grid">
-        <novel-card
-          v-for="novel in hotNovels"
-          :key="novel.id"
-          :novel="novel"
-          @click="goToNovelDetail(novel.id)"
-        />
+      <div v-else class="search-history-container">
+        <el-tag 
+          v-for="history in searchHistories" 
+          :key="history.id"
+          class="history-tag-large"
+          size="large"
+          closable
+          @click="useSearchHistory(history.keyword)"
+          @close="deleteSearchHistory(history.id)"
+        >
+          {{ history.keyword }}
+        </el-tag>
       </div>
     </div>
   </div>
@@ -79,7 +107,8 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { Search, Refresh } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
-import { searchNovels, getHotNovels } from '@/api/novel'
+import { searchNovels } from '@/api/novel'
+import { getSearchHistory, deleteSearchHistory as deleteSearchHistoryApi, clearAllSearchHistory as clearAllSearchHistoryApi } from '@/api/searchHistory'
 import NovelCard from '@/components/NovelCard.vue'
 
 const router = useRouter()
@@ -92,9 +121,52 @@ const searchPageSize = ref(10)
 const searchTotal = ref(0)
 const showSearchResults = ref(false)
 
-// 热门推荐相关
-const hotNovels = ref([])
+// 搜索历史相关
+const searchHistories = ref([])
+
+// 加载状态
 const loading = ref(false)
+
+// 获取搜索历史
+const fetchSearchHistory = async () => {
+  try {
+    const response = await getSearchHistory(10) // 获取最近10条搜索历史
+    searchHistories.value = response // 直接使用 response，因为 request.ts 中的响应拦截器已经返回了 response.data
+    console.log('搜索历史数据:', searchHistories.value) // 添加日志以便调试
+  } catch (error) {
+    console.error('获取搜索历史失败:', error)
+  }
+}
+
+// 使用搜索历史
+const useSearchHistory = (keyword: string) => {
+  searchQuery.value = keyword
+  handleSearch()
+}
+
+// 删除搜索历史
+const deleteSearchHistory = async (id: number) => {
+  try {
+    await deleteSearchHistoryApi(id)
+    await fetchSearchHistory() // 重新获取搜索历史
+    ElMessage.success('删除搜索历史成功')
+  } catch (error) {
+    console.error('删除搜索历史失败:', error)
+    ElMessage.error('删除搜索历史失败，请稍后重试')
+  }
+}
+
+// 清空所有搜索历史
+const clearAllSearchHistory = async () => {
+  try {
+    await clearAllSearchHistoryApi()
+    searchHistories.value = []
+    ElMessage.success('清空搜索历史成功')
+  } catch (error) {
+    console.error('清空搜索历史失败:', error)
+    ElMessage.error('清空搜索历史失败，请稍后重试')
+  }
+}
 
 // 搜索小说
 const handleSearch = async () => {
@@ -104,10 +176,14 @@ const handleSearch = async () => {
   }
 
   try {
-    const response = await searchNovels(searchQuery.value, searchPage.value, searchPageSize.value)
-    searchResults.value = response.data.items
-    searchTotal.value = response.data.total
+    const response = await searchNovels(searchQuery.value, 1) // 使用规则ID 1进行搜索
+    searchResults.value = response // 直接使用 response，因为 request.ts 中的响应拦截器已经返回了 response.data
+    searchTotal.value = response.length
     showSearchResults.value = true
+    console.log('搜索结果数据:', searchResults.value) // 添加日志以便调试
+    
+    // 搜索成功后刷新搜索历史
+    await fetchSearchHistory()
   } catch (error) {
     console.error('搜索小说失败:', error)
     ElMessage.error('搜索小说失败，请稍后重试')
@@ -133,23 +209,12 @@ const handleSearchCurrentChange = (page: number) => {
   handleSearch()
 }
 
-// 获取热门小说
-const fetchHotNovels = async () => {
+// 刷新搜索历史
+const refreshSearchHistory = () => {
   loading.value = true
-  try {
-    const response = await getHotNovels()
-    hotNovels.value = response.data
-  } catch (error) {
-    console.error('获取热门小说失败:', error)
-    ElMessage.error('获取热门小说失败，请稍后重试')
-  } finally {
+  fetchSearchHistory().finally(() => {
     loading.value = false
-  }
-}
-
-// 刷新热门小说
-const refreshHotNovels = () => {
-  fetchHotNovels()
+  })
 }
 
 // 跳转到小说详情页
@@ -157,8 +222,9 @@ const goToNovelDetail = (novelId: number) => {
   router.push(`/novel/${novelId}`)
 }
 
-onMounted(() => {
-  fetchHotNovels()
+onMounted(async () => {
+  // 获取搜索历史
+  await refreshSearchHistory()
 })
 </script>
 
@@ -171,11 +237,34 @@ onMounted(() => {
   margin-bottom: 30px;
   display: flex;
   justify-content: center;
+  flex-direction: column;
+  align-items: center;
 
   .search-input {
     width: 100%;
     max-width: 600px;
   }
+}
+
+.search-history-tags {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 600px;
+}
+
+.history-label {
+  margin-right: 10px;
+  color: #606266;
+  font-size: 14px;
+}
+
+.history-tag {
+  margin-right: 8px;
+  margin-bottom: 5px;
+  cursor: pointer;
 }
 
 .section-header {
@@ -202,7 +291,26 @@ onMounted(() => {
   margin-bottom: 30px;
 }
 
-.hot-novels {
+.search-history-section {
   margin-bottom: 30px;
+}
+
+.search-history-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.history-tag-large {
+  font-size: 14px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.history-tag-large:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 </style>

@@ -5,7 +5,7 @@ import shutil
 import subprocess
 import platform
 from typing import Dict, Any
-from utils.logger import logger
+from utils.logger_manager import api_logger, error_logger
 from database import crud
 
 router = APIRouter(prefix="/cache", tags=["缓存管理"])
@@ -63,7 +63,7 @@ async def get_cache_info():
         )
         
     except Exception as e:
-        logger.error(f"获取缓存信息失败: {str(e)}")
+        error_logger.exception(f"获取缓存信息失败", exc_info=e)
         raise HTTPException(status_code=500, detail=f"获取缓存信息失败: {str(e)}")
 
 @router.post("/create")
@@ -81,13 +81,13 @@ async def create_cache_directory():
                 subdir_path = os.path.join(cache_dir, subdir)
                 os.makedirs(subdir_path, exist_ok=True)
             
-            logger.info(f"缓存目录创建成功: {cache_dir}")
+            api_logger.info(f"缓存目录创建成功", path=cache_dir)
             return {"message": "缓存目录创建成功", "path": cache_dir}
         else:
             return {"message": "缓存目录已存在", "path": cache_dir}
             
     except Exception as e:
-        logger.error(f"创建缓存目录失败: {str(e)}")
+        error_logger.exception(f"创建缓存目录失败", exc_info=e)
         raise HTTPException(status_code=500, detail=f"创建缓存目录失败: {str(e)}")
 
 @router.post("/set-directory")
@@ -114,11 +114,11 @@ async def set_cache_directory(request: CacheDirectoryRequest):
             subdir_path = os.path.join(new_path, subdir)
             os.makedirs(subdir_path, exist_ok=True)
         
-        logger.info(f"缓存目录设置成功: {new_path}")
+        api_logger.info(f"缓存目录设置成功", path=new_path)
         return {"message": "缓存目录设置成功", "path": new_path}
         
     except Exception as e:
-        logger.error(f"设置缓存目录失败: {str(e)}")
+        error_logger.exception(f"设置缓存目录失败", exc_info=e)
         raise HTTPException(status_code=500, detail=f"设置缓存目录失败: {str(e)}")
 
 @router.post("/open")
@@ -142,11 +142,11 @@ async def open_cache_directory():
         else:
             raise HTTPException(status_code=500, detail="不支持的操作系统")
         
-        logger.info(f"打开缓存目录: {cache_dir}")
+        api_logger.info(f"打开缓存目录", path=cache_dir)
         return {"message": "缓存目录已打开", "path": cache_dir}
         
     except Exception as e:
-        logger.error(f"打开缓存目录失败: {str(e)}")
+        error_logger.exception(f"打开缓存目录失败", exc_info=e)
         raise HTTPException(status_code=500, detail=f"打开缓存目录失败: {str(e)}")
 
 @router.delete("/clear")
@@ -170,11 +170,11 @@ async def clear_cache():
                 subdir_path = os.path.join(cache_dir, subdir)
                 os.makedirs(subdir_path, exist_ok=True)
         
-        logger.info(f"缓存清空成功: {cache_dir}")
+        api_logger.info(f"缓存清空成功", path=cache_dir)
         return {"message": "缓存清空成功"}
         
     except Exception as e:
-        logger.error(f"清空缓存失败: {str(e)}")
+        error_logger.exception(f"清空缓存失败", exc_info=e)
         raise HTTPException(status_code=500, detail=f"清空缓存失败: {str(e)}")
 
 async def get_cache_directory() -> str:
@@ -189,7 +189,7 @@ async def get_cache_directory() -> str:
             
         return cache_dir
     except Exception as e:
-        logger.error(f"获取缓存目录路径失败: {str(e)}")
+        error_logger.exception(f"获取缓存目录路径失败", exc_info=e)
         # 出错时返回默认路径
         return DEFAULT_CACHE_DIR
 

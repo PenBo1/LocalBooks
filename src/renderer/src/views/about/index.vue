@@ -134,9 +134,9 @@ const version = ref('1.0.0')
 .about-card {
   max-width: 800px;
   width: 100%;
-  background-color: var(--el-bg-color);
+  // background-color: var(--el-bg-color);
   border-radius: 8px;
-  box-shadow: var(--el-box-shadow-light);
+  // box-shadow: var(--el-box-shadow-light);
   padding: 30px;
 }
 

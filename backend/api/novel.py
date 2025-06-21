@@ -1,6 +1,8 @@
 from typing import List, Optional, Dict, Any
 from fastapi import APIRouter, Depends, HTTPException, Query, Path
-from loguru import logger
+
+# 导入自定义日志系统
+from utils.logger_manager import api_logger, error_logger
 
 from database import crud
 from database.models import Novel, Chapter, SearchResult, NovelCreate, ChapterCreate, PaginatedResponse
@@ -31,13 +33,11 @@ async def search_novel(
         search_history = SearchHistoryCreate(keyword=keyword)
         await crud.add_search_history(search_history)
 
+        api_logger.info(f"搜索小说成功: {keyword}", rule_id=rule_id, results_count=len(results))
         return results
     except Exception as e:
-        logger.error(f"搜索小说失败: {str(e)}")
+        error_logger.exception(f"搜索小说失败: {keyword}", exc_info=e, rule_id=rule_id)
         raise HTTPException(status_code=500, detail=f"搜索小说失败: {str(e)}")
-
-
-# 热门小说API接口已删除
 
 
 @router.post("/add", response_model=int)
@@ -68,11 +68,12 @@ async def add_novel(novel_data: Dict[str, Any]):
         # 添加到数据库
         novel_id = await crud.create_novel(novel)
 
+        api_logger.info(f"添加小说成功: {novel_data['title']}", novel_id=novel_id)
         return novel_id
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"添加小说失败: {str(e)}")
+        error_logger.exception(f"添加小说失败: {novel_data.get('title', '未知标题')}", exc_info=e)
         raise HTTPException(status_code=500, detail=f"添加小说失败: {str(e)}")
 
 
@@ -84,11 +85,12 @@ async def get_novel_detail(novel_id: int = Path(..., description="小说ID")):
         if not novel:
             raise HTTPException(status_code=404, detail=f"小说不存在: {novel_id}")
 
+        api_logger.info(f"获取小说详情成功: {novel.title}", novel_id=novel_id)
         return novel
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"获取小说详情失败: {str(e)}")
+        error_logger.exception(f"获取小说详情失败", exc_info=e, novel_id=novel_id)
         raise HTTPException(status_code=500, detail=f"获取小说详情失败: {str(e)}")
 
 
@@ -109,11 +111,12 @@ async def fetch_novel_detail(
         if not detail:
             raise HTTPException(status_code=404, detail="获取小说详情失败")
 
+        api_logger.info(f"从网络获取小说详情成功: {detail.get('title', '未知标题')}", url=url, rule_id=rule_id)
         return detail
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"获取小说详情失败: {str(e)}")
+        error_logger.exception(f"从网络获取小说详情失败", exc_info=e, url=url, rule_id=rule_id)
         raise HTTPException(status_code=500, detail=f"获取小说详情失败: {str(e)}")
 
 
@@ -159,11 +162,12 @@ async def get_novel_chapters(novel_id: int = Path(..., description="小说ID")):
                 # 重新获取章节列表
                 chapters = await crud.get_novel_chapters(novel_id)
 
+        api_logger.info(f"获取小说章节列表成功", novel_id=novel_id, chapters_count=len(chapters))
         return chapters
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"获取小说章节列表失败: {str(e)}")
+        error_logger.exception(f"获取小说章节列表失败", exc_info=e, novel_id=novel_id)
         raise HTTPException(status_code=500, detail=f"获取小说章节列表失败: {str(e)}")
 
 
@@ -208,11 +212,12 @@ async def get_chapter_content(novel_id: int = Path(..., description="小说ID"),
                     chapter['content'] = content
                     chapter['is_downloaded'] = True
 
+        api_logger.info(f"获取章节内容成功", novel_id=novel_id, chapter_id=chapter_id, is_downloaded=chapter['is_downloaded'])
         return chapter
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"获取章节内容失败: {str(e)}")
+        error_logger.exception(f"获取章节内容失败", exc_info=e, novel_id=novel_id, chapter_id=chapter_id)
         raise HTTPException(status_code=500, detail=f"获取章节内容失败: {str(e)}")
 
 
@@ -245,11 +250,12 @@ async def get_novel_detail_from_network(novel_id: int = Path(..., description="�
         
         # 获取更新后的小说信息
         updated_novel = await crud.get_novel(novel_id)
+        api_logger.info(f"从网络更新小说详情成功: {updated_novel['title']}", novel_id=novel_id)
         return updated_novel
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"从网络获取小说详情失败: {str(e)}")
+        error_logger.exception(f"从网络获取小说详情失败", exc_info=e, novel_id=novel_id)
         raise HTTPException(status_code=500, detail=f"从网络获取小说详情失败: {str(e)}")
 
 
@@ -292,6 +298,7 @@ async def get_novel_chapters_from_network(novel_id: int = Path(..., description=
         
         # 获取更新后的章节列表
         chapters = await crud.get_novel_chapters(novel_id)
+        api_logger.info(f"从网络更新小说章节列表成功", novel_id=novel_id, chapters_count=len(chapters))
         return chapters
     except HTTPException:
         raise

@@ -24,7 +24,7 @@
 
     <!-- 书架内容 -->
     <div class="bookshelf-content">
-      <el-empty v-if="filteredNovels.length === 0" description="书架空空如也" />
+      <el-empty v-if="!filteredNovels || filteredNovels.length === 0" description="书架空空如也" />
 
       <div v-else class="novel-grid">
         <novel-card
@@ -40,7 +40,7 @@
       </div>
 
       <el-pagination
-        v-if="total > pageSize"
+        v-if="total && total > pageSize"
         v-model:current-page="currentPage"
         v-model:page-size="pageSize"
         :page-sizes="[12, 24, 36, 48]"
@@ -98,12 +98,17 @@ const novelToRemove = ref(null)
 
 // 过滤后的小说列表
 const filteredNovels = computed(() => {
+  if (!novels.value) {
+    return []
+  }
+  
   if (!searchQuery.value) {
     return novels.value
   }
   
   const query = searchQuery.value.toLowerCase()
   return novels.value.filter(novel => {
+    if (!novel) return false
     return novel.title.toLowerCase().includes(query) || 
            (novel.author && novel.author.toLowerCase().includes(query))
   })

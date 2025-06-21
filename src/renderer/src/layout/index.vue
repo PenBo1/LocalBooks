@@ -244,10 +244,84 @@ onMounted(() => {
 
 /* 优化菜单项样式 */
 .el-menu-item {
-  transition: background-color 0.2s, color 0.2s;
+  position: relative;
+  transition: all 0.3s ease;
+  border-radius: 4px;
+  margin: 4px 8px;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--el-menu-hover-bg-color);
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    transform: scale(0.9);
+    z-index: -1;
+    border-radius: 4px;
+  }
+  
+  &:hover {
+    color: var(--el-menu-active-color);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    
+    &::before {
+      opacity: 1;
+      transform: scale(1);
+    }
+    
+    i {
+      transform: scale(1.1);
+      filter: drop-shadow(0 0 2px var(--el-menu-active-color));
+    }
+  }
+  
+  &.is-active {
+    background-color: transparent;
+    color: var(--el-menu-active-color);
+    font-weight: bold;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 4px;
+      height: 60%;
+      background-color: var(--el-menu-active-color);
+      border-radius: 0 2px 2px 0;
+    }
+  }
 }
 
 /* 优化图标样式 */
+.el-menu-item i {
+  transition: all 0.3s ease;
+  margin-right: 8px;
+}
+
+/* 为不同主题定制悬浮样式 */
+body.theme-dark .el-menu-item:hover {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+}
+
+body.theme-eye-protection .el-menu-item:hover {
+  box-shadow: 0 2px 10px rgba(0, 128, 0, 0.1);
+}
+
+body.theme-light-yellow .el-menu-item:hover {
+  box-shadow: 0 2px 10px rgba(204, 153, 0, 0.1);
+}
+
+body.theme-pink .el-menu-item:hover {
+  box-shadow: 0 2px 10px rgba(255, 105, 180, 0.1);
+}
 .el-menu-item .el-icon {
   margin-right: 5px;
   will-change: transform;

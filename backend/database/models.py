@@ -107,6 +107,7 @@ class RuleBase(BaseModel):
     name: str
     source_url: str
     search_url: str
+    search_result_rule: Optional[str] = None
     cover_rule: Optional[str] = None
     title_rule: str
     author_rule: Optional[str] = None

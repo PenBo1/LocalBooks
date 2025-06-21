@@ -74,6 +74,7 @@ CREATE_TABLES = [
         name TEXT NOT NULL,
         source_url TEXT NOT NULL,
         search_url TEXT NOT NULL,
+        search_result_rule TEXT,
         cover_rule TEXT,
         title_rule TEXT NOT NULL,
         author_rule TEXT,

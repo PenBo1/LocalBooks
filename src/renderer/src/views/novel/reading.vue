@@ -125,39 +125,45 @@
         <el-divider />
 
         <h3>字体大小</h3>
-        <div class="font-size-control">
-          <el-button @click="decreaseFontSize" :disabled="fontSize <= 12">
-            <el-icon><Minus /></el-icon>
-          </el-button>
-          <span class="font-size-value">{{ fontSize }}px</span>
-          <el-button @click="increaseFontSize" :disabled="fontSize >= 28">
-            <el-icon><Plus /></el-icon>
-          </el-button>
+        <div class="setting-item">
+          <div class="font-size-control">
+            <el-button @click="decreaseFontSize" :disabled="fontSize <= 12">
+              <el-icon><Minus /></el-icon>
+            </el-button>
+            <span class="font-size-value">{{ fontSize }}px</span>
+            <el-button @click="increaseFontSize" :disabled="fontSize >= 28">
+              <el-icon><Plus /></el-icon>
+            </el-button>
+          </div>
         </div>
 
         <el-divider />
 
         <h3>字体</h3>
-        <el-select v-model="fontFamily" placeholder="选择字体" style="width: 100%">
-          <el-option
-            v-for="font in fontOptions"
-            :key="font.value"
-            :label="font.label"
-            :value="font.value"
-            :style="{ fontFamily: font.value }"
-          />
-        </el-select>
+        <div class="setting-item">
+          <el-select v-model="fontFamily" placeholder="选择字体" style="width: 100%">
+            <el-option
+              v-for="font in fontOptions"
+              :key="font.value"
+              :label="font.label"
+              :value="font.value"
+              :style="{ fontFamily: font.value }"
+            />
+          </el-select>
+        </div>
 
         <el-divider />
 
         <h3>行距</h3>
-        <el-slider
-          v-model="lineHeight"
-          :min="1"
-          :max="3"
-          :step="0.1"
-          show-stops
-        />
+        <div class="setting-item">
+          <el-slider
+            v-model="lineHeight"
+            :min="1"
+            :max="3"
+            :step="0.1"
+            show-stops
+          />
+        </div>
 
         <el-divider />
 

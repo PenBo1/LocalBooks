@@ -29,7 +29,7 @@
 
     <!-- 历史内容 -->
     <div class="history-content">
-      <el-empty v-if="filteredHistory.length === 0" description="暂无阅读历史" />
+      <el-empty v-if="!filteredHistory || filteredHistory.length === 0" description="暂无阅读历史" />
 
       <div v-else class="novel-grid">
         <novel-card
@@ -45,7 +45,7 @@
       </div>
 
       <el-pagination
-        v-if="total > pageSize"
+        v-if="total && total > pageSize"
         v-model:current-page="currentPage"
         v-model:page-size="pageSize"
         :page-sizes="[12, 24, 36, 48]"
@@ -120,6 +120,10 @@ const clearAllDialogVisible = ref(false)
 
 // 过滤后的历史列表
 const filteredHistory = computed(() => {
+  if (!historyList.value) {
+    return []
+  }
+  
   if (!searchQuery.value) {
     return historyList.value
   }
@@ -127,6 +131,7 @@ const filteredHistory = computed(() => {
   const query = searchQuery.value.toLowerCase()
   return historyList.value.filter(item => {
     const novel = item.novel
+    if (!novel) return false
     return novel.title.toLowerCase().includes(query) || 
            (novel.author && novel.author.toLowerCase().includes(query))
   })

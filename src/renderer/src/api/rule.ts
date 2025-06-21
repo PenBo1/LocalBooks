@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 获取规则列表
 export function getRules(page: number = 1, page_size: number = 10, sort_by: string = 'updated_at') {
   return request({
-    url: '/rule',
+    url: '/rule/',
     method: 'get',
     params: { page, page_size, sort_by }
   })
@@ -11,6 +11,10 @@ export function getRules(page: number = 1, page_size: number = 10, sort_by: stri
 
 // 获取规则详情
 export function getRule(id: number) {
+  // 确保id是有效的数字，避免发送undefined请求
+  if (!id || isNaN(Number(id))) {
+    return Promise.reject(new Error('无效的规则ID'))
+  }
   return request({
     url: `/rule/${id}`,
     method: 'get'
@@ -22,6 +26,7 @@ export function createRule(data: {
   name: string
   source_url: string
   search_url: string
+  search_result_rule?: string
   cover_rule?: string
   title_rule: string
   author_rule?: string
@@ -41,6 +46,7 @@ export function updateRule(id: number, data: {
   name?: string
   source_url?: string
   search_url?: string
+  search_result_rule?: string
   cover_rule?: string
   title_rule?: string
   author_rule?: string
